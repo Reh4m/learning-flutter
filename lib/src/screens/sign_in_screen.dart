@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/screens/sign_up_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -16,6 +17,12 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController passwordController = TextEditingController();
 
   bool showPassword = false;
+
+  Future<void> saveLoginStatus(bool isLoggedIn) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +83,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     MaterialButton(
                       onPressed: () {
                         if (_signInFormKey.currentState!.validate()) {
-                          //
+                          saveLoginStatus(true);
+
+                          Navigator.pushNamed(context, '/');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -38,6 +39,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
     }
+  }
+
+  Future<void> saveLoginStatus(bool isLoggedIn) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
   @override
@@ -84,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 borderRadius: BorderRadius.circular(50.0),
                               ),
                               child:
-                                  _profileImage != null
+                                  _profileImage == null
                                       ? Icon(
                                         Icons.camera_alt_outlined,
                                         size: 40.0,
@@ -194,7 +201,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       MaterialButton(
                         onPressed: () {
                           if (_signUpFormKey.currentState!.validate()) {
-                            //
+                            saveLoginStatus(true);
+
+                            Navigator.pushNamed(context, '/');
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
