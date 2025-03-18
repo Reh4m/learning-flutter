@@ -14,6 +14,8 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  bool showPassword = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,10 +45,21 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 20.0),
                     TextFormField(
                       controller: passwordController,
-                      obscureText: true,
+                      obscureText: !showPassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        suffixIcon: const Icon(Icons.visibility_off_outlined),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            showPassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
