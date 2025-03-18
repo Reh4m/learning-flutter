@@ -14,6 +14,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  bool showPassword1 = false;
+  bool showPassword2 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +99,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 20.0),
                       TextFormField(
                         controller: passwordController,
+                        obscureText: !showPassword1,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          suffixIcon: const Icon(Icons.visibility_off_outlined),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              showPassword1
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                showPassword1 = !showPassword1;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Password is required';
@@ -109,14 +124,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
+                        controller: confirmPasswordController,
+                        obscureText: !showPassword2,
                         decoration: InputDecoration(
                           labelText: 'Confirm Password',
-                          suffixIcon: const Icon(Icons.visibility_off_outlined),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              showPassword2
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                showPassword2 = !showPassword2;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Confirm Password is required';
+                          }
+                          // Add a check to ensure that the password and confirm password match
+                          if (passwordController.text !=
+                              confirmPasswordController.text) {
+                            return 'Passwords do not match';
                           }
                           return null;
                         },
