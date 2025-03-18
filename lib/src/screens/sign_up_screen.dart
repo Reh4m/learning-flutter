@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -11,6 +15,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
 
+  File? _profileImage;
+
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -18,6 +24,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool showPassword1 = false;
   bool showPassword2 = false;
+
+  Future _pickProfileImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+
+      setState(() => _profileImage = imageTemporary);
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,36 +63,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   key: _signUpFormKey,
                   child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            width: 100.0,
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(50.0),
+                      GestureDetector(
+                        onTap: _pickProfileImage,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              width: 100.0,
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                image:
+                                    _profileImage != null
+                                        ? DecorationImage(
+                                          image: FileImage(_profileImage!),
+                                          fit: BoxFit.cover,
+                                        )
+                                        : null,
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              child:
+                                  _profileImage != null
+                                      ? Icon(
+                                        Icons.camera_alt_outlined,
+                                        size: 40.0,
+                                        color: Colors.grey[400],
+                                      )
+                                      : null,
                             ),
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              size: 40.0,
-                              color: Colors.grey[400],
+                            Container(
+                              width: 30.0,
+                              height: 30.0,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 20.0,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 30.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              size: 20.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
