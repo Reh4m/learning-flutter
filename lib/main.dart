@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Learning Flutter',
       onGenerateRoute: Routes.generateRoute,
-      initialRoute: isLoggedIn ? '/' : '/sign-in',
+      initialRoute: '/splash-screen',
     );
   }
 }
