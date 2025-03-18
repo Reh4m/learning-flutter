@@ -38,6 +38,7 @@ dependencies:
   email_validator: ^3.0.0
   shared_preferences: ^2.5.2
   another_flutter_splash_screen: ^1.2.1
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
