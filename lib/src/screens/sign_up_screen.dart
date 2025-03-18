@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -125,6 +126,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email is required';
+                          }
+                          if (!EmailValidator.validate(value)) {
+                            return 'Please enter a valid email';
                           }
                           return null;
                         },
