@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/screens/customize_theme_screen.dart';
 import 'package:learning_flutter/src/screens/home_screen.dart';
 import 'package:learning_flutter/src/screens/sign_in_screen.dart';
 import 'package:learning_flutter/src/screens/sign_up_screen.dart';
@@ -15,6 +16,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => SignInScreen());
       case '/sign-up':
         return MaterialPageRoute(builder: (_) => SignUpScreen());
+      case '/customize-theme':
+        return MaterialPageRoute(builder: (_) => CustomizeThemeScreen());
       default:
         return MaterialPageRoute(
           builder:
