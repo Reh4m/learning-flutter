@@ -201,7 +201,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                 onPressed: () {},
                 backgroundColor: Theme.of(context).primaryColorLight,
                 avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
-                label: const Text('Default'),
+                label: const Text(
+                  'Default',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -210,7 +213,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               ActionChip(
                 onPressed: () {},
                 avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
-                label: const Text('Sunset orange'),
+                label: const Text(
+                  'Sunset orange',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -219,7 +225,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               ActionChip(
                 onPressed: () {},
                 avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
-                label: const Text('Emerald green'),
+                label: const Text(
+                  'Emerald green',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -228,7 +237,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               ActionChip(
                 onPressed: () {},
                 avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
-                label: const Text('Royal purple'),
+                label: const Text(
+                  'Royal purple',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -237,7 +249,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               ActionChip(
                 onPressed: () {},
                 avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
-                label: const Text('Golden yellow'),
+                label: const Text(
+                  'Golden yellow',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -246,7 +261,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               ActionChip(
                 onPressed: () {},
                 avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
-                label: const Text('Midnight dark'),
+                label: const Text(
+                  'Midnight dark',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
