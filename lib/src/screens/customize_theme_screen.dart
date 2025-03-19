@@ -98,96 +98,71 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
           ValueListenableBuilder(
             valueListenable: GlobalValues.colorMode,
             builder:
-                (context, value, child) => Wrap(
+                (context, value, child) => Row(
                   children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () => changeColorMode(ColorMode.light),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => changeColorMode(ColorMode.light),
 
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor:
-                            value == ColorMode.light
-                                ? Theme.of(context).primaryColorLight
-                                : Theme.of(context).colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor:
+                              value == ColorMode.light
+                                  ? Theme.of(context).primaryColorLight
+                                  : Theme.of(context).colorScheme.surface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.light_mode),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Light mode',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.light_mode),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Light mode',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => changeColorMode(ColorMode.dark),
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor:
-                            value == ColorMode.dark
-                                ? Theme.of(context).primaryColorLight
-                                : Theme.of(context).colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => changeColorMode(ColorMode.dark),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor:
+                              value == ColorMode.dark
+                                  ? Theme.of(context).primaryColorLight
+                                  : Theme.of(context).colorScheme.surface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.dark_mode),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Dark mode',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.dark_mode),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Dark mode',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor:
-                            value == ColorMode.system
-                                ? Theme.of(context).primaryColorLight
-                                : Theme.of(context).colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.computer_rounded),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'System default',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
