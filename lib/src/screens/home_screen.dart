@@ -63,6 +63,7 @@ class HomeScreen extends StatelessWidget {
               accountEmail: Text('20030124@itcelaya.edu.mx'),
             ),
             ListTile(
+              leading: Icon(Icons.dashboard_customize_outlined),
               title: Text('Customize theme'),
               onTap: () {
                 Navigator.pushNamed(context, '/customize-theme');
