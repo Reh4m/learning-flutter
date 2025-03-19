@@ -13,6 +13,10 @@ class LightTheme {
   static const Color textPrimaryLight = Color(0xFFA2A2A2);
   static const Color textSecondary = Color(0xFF242424);
 
+  static const Color greyLighten1 = Color(0xFFE3E3E3);
+  static const Color greyLighten2 = Color(0xFFEDEDED);
+  static const Color greyLighten3 = Color(0xFFD8D8D8);
+
   static const Color success = Color(0xFF34C759);
   static const Color warning = Color(0xFFFF9500);
   static const Color error = Color(0xFFFF3B30);
