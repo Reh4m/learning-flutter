@@ -32,9 +32,12 @@ class _SignInScreenState extends State<SignInScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text('Sign In'),
+              const Text(
+                'Sign In',
+                style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 20.0),
               Form(
                 key: _signInFormKey,

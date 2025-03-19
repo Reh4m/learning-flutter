@@ -63,9 +63,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Create an account'),
+                const Text(
+                  'Create an Account',
+                  style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 5.0),
-                const Text('Sign up to get started'),
+                const Text(
+                  'Sign up to get started',
+                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
+                ),
                 const SizedBox(height: 20.0),
                 Form(
                   key: _signUpFormKey,
