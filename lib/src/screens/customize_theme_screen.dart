@@ -181,17 +181,78 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const Text(
-            'Custom themes',
+            'Custom theme',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 10),
           const Text(
-            'Set your own app theme by selecting primary and secondary colors',
+            'Choose a preferred color scheme for the app',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w300,
               height: 1.5,
             ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 10,
+            children: <Widget>[
+              ActionChip(
+                onPressed: () {},
+                backgroundColor: Theme.of(context).primaryColorLight,
+                avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
+                label: const Text('Default'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {},
+                avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
+                label: const Text('Sunset orange'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {},
+                avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
+                label: const Text('Emerald green'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {},
+                avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
+                label: const Text('Royal purple'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {},
+                avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
+                label: const Text('Golden yellow'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {},
+                avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
+                label: const Text('Midnight dark'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+            ],
           ),
         ],
       ),
