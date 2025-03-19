@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/themes/theme.dart';
+import 'package:learning_flutter/src/utils/global_values.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomizeThemeScreen extends StatefulWidget {
   const CustomizeThemeScreen({super.key});
@@ -9,6 +12,22 @@ class CustomizeThemeScreen extends StatefulWidget {
 }
 
 class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
+  Future<void> changeColorMode(ColorMode mode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (mode == ColorMode.light) {
+      GlobalValues.colorMode.value = ColorMode.light;
+      GlobalValues.themeApp.value = AppTheme.lightTheme;
+      await prefs.setString('theme', 'light');
+    }
+
+    if (mode == ColorMode.dark) {
+      GlobalValues.colorMode.value = ColorMode.dark;
+      GlobalValues.themeApp.value = AppTheme.darkTheme;
+      await prefs.setString('theme', 'dark');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +93,106 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               fontWeight: FontWeight.w300,
               height: 1.5,
             ),
+          ),
+          const SizedBox(height: 10),
+          ValueListenableBuilder(
+            valueListenable: GlobalValues.colorMode,
+            builder:
+                (context, value, child) => Wrap(
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () => changeColorMode(ColorMode.light),
+
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor:
+                            value == ColorMode.light
+                                ? Theme.of(context).primaryColorLight
+                                : Theme.of(context).colorScheme.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.light_mode),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Light mode',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => changeColorMode(ColorMode.dark),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor:
+                            value == ColorMode.dark
+                                ? Theme.of(context).primaryColorLight
+                                : Theme.of(context).colorScheme.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.dark_mode),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Dark mode',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor:
+                            value == ColorMode.system
+                                ? Theme.of(context).primaryColorLight
+                                : Theme.of(context).colorScheme.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.computer_rounded),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'System default',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
           ),
         ],
       ),
