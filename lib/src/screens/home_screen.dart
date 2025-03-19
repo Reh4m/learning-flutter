@@ -52,6 +52,25 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+              ),
+              accountName: Text('Emmanuel Ruiz Pérez'),
+              accountEmail: Text('20030124@itcelaya.edu.mx'),
+            ),
+            ListTile(
+              title: Text('Customize theme'),
+              onTap: () {
+                Navigator.pushNamed(context, '/customize-theme');
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
