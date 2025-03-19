@@ -13,6 +13,8 @@ void main() async {
 
   GlobalValues.themeApp.value =
       theme == 'dark' ? AppTheme.darkTheme : AppTheme.lightTheme;
+  GlobalValues.colorMode.value =
+      theme == 'dark' ? ColorMode.dark : ColorMode.light;
 
   runApp(const MyApp());
 }
