@@ -14,7 +14,7 @@ class AppTheme {
       brightness: Brightness.light,
       primary: LightTheme.primaryColor,
       secondary: LightTheme.primaryColorLight,
-      surface: LightTheme.backgroundColor,
+      surface: LightTheme.greyLighten2,
       error: LightTheme.error,
       onPrimary: LightTheme.onPrimaryColor,
       onSecondary: LightTheme.onPrimaryColor,
@@ -43,7 +43,7 @@ class AppTheme {
       brightness: Brightness.dark,
       primary: DarkTheme.primaryColor,
       secondary: DarkTheme.primaryColorLight,
-      surface: DarkTheme.backgroundColor,
+      surface: DarkTheme.cardBackgroundColor,
       error: DarkTheme.error,
       onPrimary: DarkTheme.onPrimaryColor,
       onSecondary: DarkTheme.onPrimaryColor,
@@ -54,7 +54,7 @@ class AppTheme {
     // Text Form Input
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: DarkTheme.greyLighten2,
+      fillColor: DarkTheme.cardBackgroundColor,
       labelStyle: TextStyle(color: DarkTheme.textSecondary),
       border: UnderlineInputBorder(
         borderSide: BorderSide.none,
