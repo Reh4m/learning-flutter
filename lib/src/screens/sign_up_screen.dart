@@ -80,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               width: 100.0,
                               height: 100.0,
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
+                                color: Theme.of(context).colorScheme.surface,
                                 image:
                                     _profileImage != null
                                         ? DecorationImage(
