@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
 import 'package:learning_flutter/src/themes/theme_manager.dart';
 import 'package:learning_flutter/src/utils/global_values.dart';
@@ -256,9 +257,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
-                      label: const Text(
+                      label: Text(
                         'Default',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.defaultTheme
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -277,9 +282,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
-                      label: const Text(
+                      label: Text(
                         'Sunset orange',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.sunsetOrange
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -298,9 +307,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
-                      label: const Text(
+                      label: Text(
                         'Emerald green',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.emeraldGreen
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -319,9 +332,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
-                      label: const Text(
+                      label: Text(
                         'Royal purple',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.royalPurple
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -340,9 +357,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
-                      label: const Text(
+                      label: Text(
                         'Golden yellow',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.goldenYellow
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -361,9 +382,13 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
-                      label: const Text(
+                      label: Text(
                         'Midnight dark',
                         style: TextStyle(
+                          color:
+                              value == ThemeColor.midnight
+                                  ? LightTheme.textPrimary
+                                  : null,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
