@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/themes/theme.dart';
+import 'package:learning_flutter/src/utils/global_values.dart';
 
 enum ThemeColor {
   defaultTheme,
@@ -61,6 +63,37 @@ class ThemeManager {
       primaryColor: colors.primaryColor,
       primaryColorLight: colors.primaryColorLight,
     );
+  }
+
+  static ThemeData getLightTheme(CustomTheme customTheme) {
+    return AppTheme.lightTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+    );
+  }
+
+  static ThemeData getDarkTheme(CustomTheme customTheme) {
+    return AppTheme.darkTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+    );
+  }
+
+  static ThemeData getThemeInstance(
+    CustomTheme customTheme,
+    ColorMode themeMode,
+  ) {
+    return themeMode == ColorMode.dark
+        ? getDarkTheme(customTheme)
+        : getLightTheme(customTheme);
   }
 
   /// Getters para los temas
