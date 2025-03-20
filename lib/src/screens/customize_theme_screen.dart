@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/themes/light_theme.dart';
-import 'package:learning_flutter/src/themes/theme.dart';
-import 'package:learning_flutter/src/themes/theme_manager.dart';
+import 'package:learning_flutter/src/themes/theme_colors.dart';
 import 'package:learning_flutter/src/utils/global_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:learning_flutter/src/utils/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomizeThemeScreen extends StatefulWidget {
   const CustomizeThemeScreen({super.key});
@@ -14,68 +14,6 @@ class CustomizeThemeScreen extends StatefulWidget {
 }
 
 class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
-  Future<void> changeColorMode(ColorMode mode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    ThemeColor currentThemeColor = GlobalValues.themeColor.value;
-
-    CustomTheme currentCustomTheme = ThemeManager.getTheme(currentThemeColor);
-
-    if (mode == ColorMode.light) {
-      GlobalValues.colorMode.value = ColorMode.light;
-      GlobalValues.themeApp.value = ThemeManager.getThemeInstance(
-        currentCustomTheme,
-        ColorMode.light,
-      );
-      await prefs.setString('theme', 'light');
-    }
-
-    if (mode == ColorMode.dark) {
-      GlobalValues.colorMode.value = ColorMode.dark;
-      GlobalValues.themeApp.value = ThemeManager.getThemeInstance(
-        currentCustomTheme,
-        ColorMode.dark,
-      );
-      await prefs.setString('theme', 'dark');
-    }
-  }
-
-  Future<void> changeColorTheme(ThemeColor mode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    CustomTheme customTheme = ThemeManager.getTheme(mode);
-
-    ThemeData darkThemeInstance = AppTheme.darkTheme.copyWith(
-      primaryColor: customTheme.primaryColor,
-      primaryColorLight: customTheme.primaryColorLight,
-      colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
-        primary: customTheme.primaryColor,
-        secondary: customTheme.primaryColorLight,
-      ),
-    );
-
-    ThemeData lightThemeInstance = AppTheme.lightTheme.copyWith(
-      primaryColor: customTheme.primaryColor,
-      primaryColorLight: customTheme.primaryColorLight,
-      colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
-        primary: customTheme.primaryColor,
-        secondary: customTheme.primaryColorLight,
-      ),
-    );
-
-    if (GlobalValues.colorMode.value == ColorMode.light) {
-      GlobalValues.themeApp.value = lightThemeInstance;
-    }
-
-    if (GlobalValues.colorMode.value == ColorMode.dark) {
-      GlobalValues.themeApp.value = darkThemeInstance;
-    }
-
-    GlobalValues.themeColor.value = mode;
-
-    await prefs.setString('themeColor', mode.name);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +30,7 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                   _buildTopBar(),
                   _buildSelectTheme(),
                   _buildColorPicker(),
-                  _buildSelectFont(),
+                  // _buildSelectFont(),
                 ],
               ),
             ),
@@ -124,6 +62,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
   }
 
   Widget _buildSelectTheme() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
       child: Column(
@@ -143,79 +83,77 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          ValueListenableBuilder(
-            valueListenable: GlobalValues.colorMode,
-            builder:
-                (context, value, child) => Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => changeColorMode(ColorMode.light),
-
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor:
-                              value == ColorMode.light
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).colorScheme.surface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.light_mode),
-                              const SizedBox(width: 10),
-                              const Text(
-                                'Light mode',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  onPressed:
+                      () => themeProvider.updateColorMode(ColorMode.light),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor:
+                        themeProvider.colorMode == ColorMode.light
+                            ? Theme.of(context).primaryColorLight
+                            : Theme.of(context).colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => changeColorMode(ColorMode.dark),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor:
-                              value == ColorMode.dark
-                                  ? Theme.of(context).primaryColorLight
-                                  : Theme.of(context).colorScheme.surface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.dark_mode),
-                              const SizedBox(width: 10),
-                              const Text(
-                                'Dark mode',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.light_mode),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Light mode',
+                          style: TextStyle(
+                            // color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed:
+                      () => themeProvider.updateColorMode(ColorMode.dark),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor:
+                        themeProvider.colorMode == ColorMode.dark
+                            ? Theme.of(context).primaryColorLight
+                            : Theme.of(context).colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.dark_mode),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Dark mode',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -223,6 +161,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
   }
 
   Widget _buildColorPicker() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
       child: Column(
@@ -250,10 +190,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                   children: <Widget>[
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.defaultTheme);
+                        themeProvider.updateThemeColor(ThemeColor.defaultTheme);
                       },
                       backgroundColor:
-                          value == ThemeColor.defaultTheme
+                          themeProvider.themeColor == ThemeColor.defaultTheme
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
@@ -261,7 +201,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Default',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.defaultTheme
+                              themeProvider.themeColor ==
+                                      ThemeColor.defaultTheme
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -275,10 +216,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                     ),
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.sunsetOrange);
+                        themeProvider.updateThemeColor(ThemeColor.sunsetOrange);
                       },
                       backgroundColor:
-                          value == ThemeColor.sunsetOrange
+                          themeProvider.themeColor == ThemeColor.sunsetOrange
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
@@ -286,7 +227,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Sunset orange',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.sunsetOrange
+                              themeProvider.themeColor ==
+                                      ThemeColor.sunsetOrange
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -300,10 +242,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                     ),
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.emeraldGreen);
+                        themeProvider.updateThemeColor(ThemeColor.emeraldGreen);
                       },
                       backgroundColor:
-                          value == ThemeColor.emeraldGreen
+                          themeProvider.themeColor == ThemeColor.emeraldGreen
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
@@ -311,7 +253,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Emerald green',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.emeraldGreen
+                              themeProvider.themeColor ==
+                                      ThemeColor.emeraldGreen
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -325,10 +268,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                     ),
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.royalPurple);
+                        themeProvider.updateThemeColor(ThemeColor.royalPurple);
                       },
                       backgroundColor:
-                          value == ThemeColor.royalPurple
+                          themeProvider.themeColor == ThemeColor.royalPurple
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
@@ -336,7 +279,7 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Royal purple',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.royalPurple
+                              themeProvider.themeColor == ThemeColor.royalPurple
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -350,10 +293,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                     ),
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.goldenYellow);
+                        themeProvider.updateThemeColor(ThemeColor.goldenYellow);
                       },
                       backgroundColor:
-                          value == ThemeColor.goldenYellow
+                          themeProvider.themeColor == ThemeColor.goldenYellow
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
@@ -361,7 +304,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Golden yellow',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.goldenYellow
+                              themeProvider.themeColor ==
+                                      ThemeColor.goldenYellow
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -375,10 +319,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                     ),
                     ActionChip(
                       onPressed: () {
-                        changeColorTheme(ThemeColor.midnight);
+                        themeProvider.updateThemeColor(ThemeColor.midnightDark);
                       },
                       backgroundColor:
-                          value == ThemeColor.midnight
+                          themeProvider.themeColor == ThemeColor.midnightDark
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).colorScheme.surface,
                       avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
@@ -386,7 +330,8 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
                         'Midnight dark',
                         style: TextStyle(
                           color:
-                              value == ThemeColor.midnight
+                              themeProvider.themeColor ==
+                                      ThemeColor.midnightDark
                                   ? LightTheme.textPrimary
                                   : null,
                           fontSize: 14,
@@ -406,27 +351,57 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
     );
   }
 
-  Widget _buildSelectFont() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'Custom Font',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Select custom font for your workspace',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSelectFont() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         const Text(
+  //           'Custom Font',
+  //           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         const Text(
+  //           'Select custom font for your workspace',
+  //           style: TextStyle(
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.w300,
+  //             height: 1.5,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         Container(
+  //           decoration: BoxDecoration(
+  //             color: Theme.of(context).colorScheme.surface,
+  //             borderRadius: BorderRadius.circular(5),
+  //           ),
+  //           child: DropdownButtonHideUnderline(
+  //             child: DropdownButton<String>(
+  //               value: currentTextTheme,
+  //               isExpanded: true,
+  //               padding: const EdgeInsets.symmetric(horizontal: 12),
+  //               items: const [
+  //                 DropdownMenuItem(value: 'Roboto', child: Text('Roboto')),
+  //                 DropdownMenuItem(value: 'Lato', child: Text('Lato')),
+  //                 DropdownMenuItem(
+  //                   value: 'Open Sans',
+  //                   child: Text('Open Sans'),
+  //                 ),
+  //                 DropdownMenuItem(
+  //                   value: 'Montserrat',
+  //                   child: Text('Montserrat'),
+  //                 ),
+  //                 DropdownMenuItem(value: 'Poppins', child: Text('Poppins')),
+  //               ],
+  //               onChanged: (String? value) {
+  //                 changeFontFamily(value!);
+  //               },
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
