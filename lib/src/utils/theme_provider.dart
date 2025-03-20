@@ -1,80 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/themes/dark_theme.dart';
+import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
-import 'package:learning_flutter/src/themes/theme_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-enum ColorMode { light, dark, system }
 
 class ThemeProvider extends ChangeNotifier {
   final SharedPreferences prefs;
-  ThemeData _currentAppTheme = AppTheme.lightTheme;
 
-  ThemeData get currentAppTheme => _currentAppTheme;
+  // Theme data classes
+  ThemeMode _themeMode = ThemeMode.light;
+  ThemeData _lightTheme = AppTheme.generateLightTheme('Roboto');
+  ThemeData _darkTheme = AppTheme.generateDarkTheme('Roboto');
 
   // Current theme values
-  ColorMode _colorMode = ColorMode.light;
   ThemeColor _themeColor = ThemeColor.defaultTheme;
   String _fontFamily = 'Roboto';
 
-  ColorMode get colorMode => _colorMode;
+  // Getters
+  ThemeMode get themeMode => _themeMode;
+  ThemeData get lightTheme => _lightTheme;
+  ThemeData get darkTheme => _darkTheme;
+
   ThemeColor get themeColor => _themeColor;
   String get fontFamily => _fontFamily;
 
   ThemeProvider(this.prefs);
 
   Future<void> loadAppTheme() async {
-    // Load saved values from SharedPreferences
-    String colorMode = prefs.getString('colorMode') ?? 'light';
-    String themeColor = prefs.getString('themeColor') ?? 'defaultTheme';
-    String fontFamily = prefs.getString('fontFamily') ?? 'Roboto';
+    // Load current theme mode
+    String themeModeString = prefs.getString('themeMode') ?? 'light';
 
-    // Set the current theme values
-    _colorMode = colorMode == 'light' ? ColorMode.light : ColorMode.dark;
-    _themeColor = ThemeColor.values.byName(themeColor);
-    _fontFamily = fontFamily;
+    // Load current theme values
+    String themeColorString = prefs.getString('themeColor') ?? 'defaultTheme';
+
+    // Load current font family
+    String fontFamilyValue = prefs.getString('fontFamily') ?? 'Roboto';
+
+    // Set values
+    _themeMode = themeModeString == 'light' ? ThemeMode.light : ThemeMode.dark;
+    _themeColor = ThemeColor.values.byName(themeColorString);
+    _fontFamily = fontFamilyValue;
+
+    // Update theme data classes
+    _updateThemeData();
 
     _updateAppTheme();
   }
 
-  void _updateAppTheme() {
-    final TextTheme textTheme = _getTextTheme();
+  void _updateThemeData() {
+    LightTheme.primaryColor =
+        ThemeColors.getCustomTheme(_themeColor).primaryColor;
+    LightTheme.primaryColorLight =
+        ThemeColors.getCustomTheme(_themeColor).primaryColorLight;
+    DarkTheme.primaryColor =
+        ThemeColors.getCustomTheme(_themeColor).primaryColor;
+    DarkTheme.primaryColorLight =
+        ThemeColors.getCustomTheme(_themeColor).primaryColorLight;
+  }
 
-    _currentAppTheme =
-        _colorMode == ColorMode.light
-            ? _getAppTheme(AppTheme.lightTheme, textTheme)
-            : _getAppTheme(AppTheme.darkTheme, textTheme);
+  void _updateAppTheme() {
+    _lightTheme = AppTheme.generateLightTheme(_fontFamily);
+    _darkTheme = AppTheme.generateDarkTheme(_fontFamily);
 
     notifyListeners();
   }
 
-  TextTheme _getTextTheme() {
-    return ThemeFonts.getTextTheme(_fontFamily);
-  }
-
-  ThemeData _getAppTheme(ThemeData theme, TextTheme textTheme) {
-    return theme.copyWith(
-      primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-      primaryColorLight:
-          ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-      colorScheme: theme.colorScheme.copyWith(
-        primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-        secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-      ),
-      textTheme: textTheme.copyWith(
-        bodySmall: theme.textTheme.bodySmall,
-        bodyMedium: theme.textTheme.bodyMedium,
-        bodyLarge: theme.textTheme.bodyLarge,
-      ),
-    );
-  }
-
-  Future<void> updateColorMode(ColorMode colorMode) async {
-    _colorMode = colorMode;
+  Future<void> updateThemeMode(ThemeMode themeMode) async {
+    _themeMode = themeMode;
 
     await prefs.setString(
-      'colorMode',
-      colorMode == ColorMode.light ? 'light' : 'dark',
+      'themeMode',
+      themeMode == ThemeMode.light ? 'light' : 'dark',
     );
 
     _updateAppTheme();
@@ -82,6 +79,8 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> updateThemeColor(ThemeColor themeColor) async {
     _themeColor = themeColor;
+
+    _updateThemeData();
 
     await prefs.setString('themeColor', themeColor.name);
 
