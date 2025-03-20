@@ -101,7 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       ? Icon(
                                         Icons.camera_alt_outlined,
                                         size: 40.0,
-                                        color: Colors.grey[400],
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
                                       )
                                       : null,
                             ),
@@ -109,13 +112,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               width: 30.0,
                               height: 30.0,
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                               child: Icon(
                                 Icons.add,
                                 size: 20.0,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                           ],
