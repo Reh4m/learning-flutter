@@ -21,6 +21,11 @@ class AppTheme {
       onSurface: LightTheme.textPrimary,
       onError: LightTheme.onPrimaryColor,
     ),
+    textTheme: TextTheme(
+      bodySmall: TextStyle(color: LightTheme.textPrimary),
+      bodyMedium: TextStyle(color: LightTheme.textPrimary),
+      bodyLarge: TextStyle(color: LightTheme.textPrimary),
+    ),
     cardColor: LightTheme.cardBackgroundColor,
     // Text Form Input
     inputDecorationTheme: InputDecorationTheme(
@@ -49,6 +54,12 @@ class AppTheme {
       onSecondary: DarkTheme.onPrimaryColor,
       onSurface: DarkTheme.textPrimary,
       onError: DarkTheme.onPrimaryColor,
+    ),
+    fontFamily: 'Incognito',
+    textTheme: TextTheme(
+      bodySmall: TextStyle(color: DarkTheme.textPrimary),
+      bodyMedium: TextStyle(color: DarkTheme.textPrimary),
+      bodyLarge: TextStyle(color: DarkTheme.textPrimary),
     ),
     cardColor: DarkTheme.cardBackgroundColor,
     // Text Form Input
