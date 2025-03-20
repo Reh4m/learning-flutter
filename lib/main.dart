@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Learning Flutter',
-      theme: themeProvider.currentAppTheme,
+      theme: themeProvider.lightTheme,
+      darkTheme: themeProvider.darkTheme,
+      themeMode: themeProvider.themeMode,
       onGenerateRoute: Routes.generateRoute,
       initialRoute: '/splash-screen',
     );
