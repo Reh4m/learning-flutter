@@ -4,8 +4,12 @@ class DarkTheme {
   static const Color backgroundColor = Color(0xFF121212);
   static const Color cardBackgroundColor = Color(0xFF1E1E1E);
 
-  static const Color primaryColor = Color(0xFF007AAD);
-  static const Color primaryColorLight = Color(0xFF005F85);
+  static Color primaryColor = Color(
+    0xFF007AAD,
+  ); // Non-constant to allow customization
+  static Color primaryColorLight = Color(
+    0xFF005F85,
+  ); // Non-constant to allow customization
   static const Color onPrimaryColor = Color(0xFFFFFFFF);
 
   static const Color textPrimary = Color(0xFFE0E0E0);

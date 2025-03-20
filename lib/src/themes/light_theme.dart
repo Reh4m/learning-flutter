@@ -5,8 +5,12 @@ class LightTheme {
   static const Color backgroundColor = Color(0xFFE0E0E0);
   static const Color cardBackgroundColor = Color(0xFFFFFFFF);
 
-  static const Color primaryColor = Color(0xFF007AAD);
-  static const Color primaryColorLight = Color(0xFFD9E2E9);
+  static Color primaryColor = Color(
+    0xFF007AAD,
+  ); // Non-constant to allow customization
+  static Color primaryColorLight = Color(
+    0xFFD9E2E9,
+  ); // Non-constant to allow customization
   static const Color onPrimaryColor = Color(0xFFFFFFFF);
 
   static const Color textPrimary = Color(0xFF313131);
