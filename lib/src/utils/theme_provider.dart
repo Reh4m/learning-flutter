@@ -41,17 +41,17 @@ class ThemeProvider extends ChangeNotifier {
 
     _currentAppTheme =
         _colorMode == ColorMode.light
-            ? _getAppTheme(AppTheme.lightTheme)
-            : _getAppTheme(AppTheme.darkTheme);
+            ? _getAppTheme(AppTheme.lightTheme, textTheme)
+            : _getAppTheme(AppTheme.darkTheme, textTheme);
 
     notifyListeners();
   }
 
   TextTheme _getTextTheme() {
-    return ThemeFonts.getFontFamily(_fontFamily);
+    return ThemeFonts.getTextTheme(_fontFamily);
   }
 
-  ThemeData _getAppTheme(ThemeData theme) {
+  ThemeData _getAppTheme(ThemeData theme, TextTheme textTheme) {
     return theme.copyWith(
       primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
       primaryColorLight:
@@ -59,6 +59,11 @@ class ThemeProvider extends ChangeNotifier {
       colorScheme: theme.colorScheme.copyWith(
         primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
         secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
+      ),
+      textTheme: textTheme.copyWith(
+        bodySmall: theme.textTheme.bodySmall,
+        bodyMedium: theme.textTheme.bodyMedium,
+        bodyLarge: theme.textTheme.bodyLarge,
       ),
     );
   }
