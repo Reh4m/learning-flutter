@@ -220,8 +220,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             );
                           }
                         },
-                        color: Colors.blue,
-                        textColor: Colors.white,
+                        color: Theme.of(context).primaryColor,
+                        textColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
