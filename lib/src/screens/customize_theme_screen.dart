@@ -88,11 +88,11 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed:
-                      () => themeProvider.updateColorMode(ColorMode.light),
+                      () => themeProvider.updateThemeMode(ThemeMode.light),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     backgroundColor:
-                        themeProvider.colorMode == ColorMode.light
+                        themeProvider.themeMode == ThemeMode.light
                             ? Theme.of(context).primaryColorLight
                             : Theme.of(context).colorScheme.surface,
                     shape: RoundedRectangleBorder(
@@ -123,11 +123,11 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed:
-                      () => themeProvider.updateColorMode(ColorMode.dark),
+                      () => themeProvider.updateThemeMode(ThemeMode.dark),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     backgroundColor:
-                        themeProvider.colorMode == ColorMode.dark
+                        themeProvider.themeMode == ThemeMode.dark
                             ? Theme.of(context).primaryColorLight
                             : Theme.of(context).colorScheme.surface,
                     shape: RoundedRectangleBorder(
