@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
 import 'package:learning_flutter/src/utils/global_values.dart';
 
@@ -26,7 +27,7 @@ class ThemeManager {
     // Default theme
     ThemeColor.defaultTheme: const CustomTheme(
       primaryColor: Color(0xFF007AAD),
-      primaryColorLight: Color(0xFFD9E2E9),
+      primaryColorLight: Color(0xFFBDD7E7),
     ),
     // Sunset Orange theme
     ThemeColor.sunsetOrange: const CustomTheme(
@@ -55,7 +56,7 @@ class ThemeManager {
     ),
   };
 
-  /// Devuelve el ThemeData correspondiente al tema seleccionado
+  // Devuelve el ThemeData correspondiente al tema seleccionado
   static CustomTheme getTheme(ThemeColor themeColor) {
     final colors = _themeColors[themeColor]!;
 
@@ -63,6 +64,18 @@ class ThemeManager {
       primaryColor: colors.primaryColor,
       primaryColorLight: colors.primaryColorLight,
     );
+  }
+
+  static final Map<String, TextTheme> _textThemes = {
+    'Roboto': GoogleFonts.robotoTextTheme(),
+    'Lato': GoogleFonts.latoTextTheme(),
+    'Open Sans': GoogleFonts.openSansTextTheme(),
+    'Montserrat': GoogleFonts.montserratTextTheme(),
+    'Poppins': GoogleFonts.poppinsTextTheme(),
+  };
+
+  static TextTheme getFontFamily(String fontFamily) {
+    return _textThemes[fontFamily]!;
   }
 
   static ThemeData getLightTheme(CustomTheme customTheme) {
