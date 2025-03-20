@@ -17,7 +17,7 @@ class ThemeProvider extends ChangeNotifier {
   String _fontFamily = 'Roboto';
 
   ColorMode get colorMode => _colorMode;
-  ThemeColor get primaryColorLight => _themeColor;
+  ThemeColor get themeColor => _themeColor;
   String get fontFamily => _fontFamily;
 
   ThemeProvider(this.prefs);
@@ -44,7 +44,10 @@ class ThemeProvider extends ChangeNotifier {
         primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
         primaryColorLight:
             ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        textTheme: textTheme,
+        colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
+          primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
+          secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
+        ),
       );
     }
 
@@ -53,7 +56,10 @@ class ThemeProvider extends ChangeNotifier {
         primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
         primaryColorLight:
             ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        textTheme: textTheme,
+        colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
+          primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
+          secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
+        ),
       );
     }
 
@@ -61,7 +67,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   TextTheme _getTextTheme() {
-    return ThemeFonts.getTextTheme(_fontFamily);
+    return ThemeFonts.getFontFamily(_fontFamily);
   }
 
   Future<void> updateColorMode(ColorMode colorMode) async {
