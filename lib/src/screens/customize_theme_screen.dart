@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
+import 'package:learning_flutter/src/themes/theme_manager.dart';
 import 'package:learning_flutter/src/utils/global_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +27,42 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
       GlobalValues.themeApp.value = AppTheme.darkTheme;
       await prefs.setString('theme', 'dark');
     }
+  }
+
+  Future<void> changeColorTheme(ThemeColor mode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    CustomTheme customTheme = ThemeManager.getTheme(mode);
+
+    ThemeData darkThemeInstance = AppTheme.darkTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+    );
+
+    ThemeData lightThemeInstance = AppTheme.lightTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+    );
+
+    if (GlobalValues.colorMode.value == ColorMode.light) {
+      GlobalValues.themeApp.value = lightThemeInstance;
+    }
+
+    if (GlobalValues.colorMode.value == ColorMode.dark) {
+      GlobalValues.themeApp.value = darkThemeInstance;
+    }
+
+    GlobalValues.themeColor.value = mode;
+
+    await prefs.setString('themeColor', mode.name);
   }
 
   @override
@@ -194,83 +231,140 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          Wrap(
-            spacing: 10,
-            children: <Widget>[
-              ActionChip(
-                onPressed: () {},
-                backgroundColor: Theme.of(context).primaryColorLight,
-                avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
-                label: const Text(
-                  'Default',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ValueListenableBuilder(
+            valueListenable: GlobalValues.themeColor,
+            builder:
+                (context, value, child) => Wrap(
+                  spacing: 10,
+                  children: <Widget>[
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.defaultTheme);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.defaultTheme
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
+                      label: const Text(
+                        'Default',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.sunsetOrange);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.sunsetOrange
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
+                      label: const Text(
+                        'Sunset orange',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.emeraldGreen);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.emeraldGreen
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
+                      label: const Text(
+                        'Emerald green',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.royalPurple);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.royalPurple
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
+                      label: const Text(
+                        'Royal purple',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.goldenYellow);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.goldenYellow
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
+                      label: const Text(
+                        'Golden yellow',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                    ActionChip(
+                      onPressed: () {
+                        changeColorTheme(ThemeColor.midnight);
+                      },
+                      backgroundColor:
+                          value == ThemeColor.midnight
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).colorScheme.surface,
+                      avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
+                      label: const Text(
+                        'Midnight dark',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      side: BorderSide.none,
+                    ),
+                  ],
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-              ActionChip(
-                onPressed: () {},
-                avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
-                label: const Text(
-                  'Sunset orange',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-              ActionChip(
-                onPressed: () {},
-                avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
-                label: const Text(
-                  'Emerald green',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-              ActionChip(
-                onPressed: () {},
-                avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
-                label: const Text(
-                  'Royal purple',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-              ActionChip(
-                onPressed: () {},
-                avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
-                label: const Text(
-                  'Golden yellow',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-              ActionChip(
-                onPressed: () {},
-                avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
-                label: const Text(
-                  'Midnight dark',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                side: BorderSide.none,
-              ),
-            ],
           ),
         ],
       ),
