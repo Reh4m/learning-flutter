@@ -10,8 +10,13 @@ class ThemeFonts {
     'Poppins': GoogleFonts.poppinsTextTheme(),
   };
 
-  static TextTheme getTextTheme(String fontFamily) {
-    return _textThemes[fontFamily]!;
+  static TextTheme getTextTheme(String fontFamily, Brightness themeMode) {
+    final baseTextTheme = _textThemes[fontFamily]!;
+
+    return baseTextTheme.apply(
+      displayColor: themeMode == Brightness.light ? Colors.black : Colors.white,
+      bodyColor: themeMode == Brightness.light ? Colors.black : Colors.white,
+    );
   }
 
   static TextTheme get roboto => _textThemes['Roboto']!;

@@ -24,7 +24,7 @@ class AppTheme {
         onSurface: LightTheme.textPrimary,
         onError: LightTheme.onPrimaryColor,
       ),
-      textTheme: ThemeFonts.getTextTheme(fontFamily),
+      textTheme: ThemeFonts.getTextTheme(fontFamily, Brightness.light),
       cardColor: LightTheme.cardBackgroundColor,
       // Text Form Input
       inputDecorationTheme: InputDecorationTheme(
@@ -57,7 +57,7 @@ class AppTheme {
         onSurface: DarkTheme.textPrimary,
         onError: DarkTheme.onPrimaryColor,
       ),
-      textTheme: ThemeFonts.getTextTheme(fontFamily),
+      textTheme: ThemeFonts.getTextTheme(fontFamily, Brightness.dark),
       cardColor: DarkTheme.cardBackgroundColor,
       // Text Form Input
       inputDecorationTheme: InputDecorationTheme(
