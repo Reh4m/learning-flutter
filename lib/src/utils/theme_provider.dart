@@ -24,7 +24,7 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> loadAppTheme() async {
     // Load saved values from SharedPreferences
-    String colorMode = prefs.getString('theme') ?? 'light';
+    String colorMode = prefs.getString('colorMode') ?? 'light';
     String themeColor = prefs.getString('themeColor') ?? 'defaultTheme';
     String fontFamily = prefs.getString('fontFamily') ?? 'Roboto';
 
@@ -67,7 +67,7 @@ class ThemeProvider extends ChangeNotifier {
     _colorMode = colorMode;
 
     await prefs.setString(
-      'theme',
+      'colorMode',
       colorMode == ColorMode.light ? 'light' : 'dark',
     );
 
