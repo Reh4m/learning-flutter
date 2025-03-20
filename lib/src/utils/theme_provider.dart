@@ -39,35 +39,28 @@ class ThemeProvider extends ChangeNotifier {
   void _updateAppTheme() {
     final TextTheme textTheme = _getTextTheme();
 
-    if (_colorMode == ColorMode.light) {
-      _currentAppTheme = AppTheme.lightTheme.copyWith(
-        primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-        primaryColorLight:
-            ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
-          primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-          secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        ),
-      );
-    }
-
-    if (_colorMode == ColorMode.dark) {
-      _currentAppTheme = AppTheme.darkTheme.copyWith(
-        primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-        primaryColorLight:
-            ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
-          primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
-          secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
-        ),
-      );
-    }
+    _currentAppTheme =
+        _colorMode == ColorMode.light
+            ? _getAppTheme(AppTheme.lightTheme)
+            : _getAppTheme(AppTheme.darkTheme);
 
     notifyListeners();
   }
 
   TextTheme _getTextTheme() {
     return ThemeFonts.getFontFamily(_fontFamily);
+  }
+
+  ThemeData _getAppTheme(ThemeData theme) {
+    return theme.copyWith(
+      primaryColor: ThemeColors.getCustomTheme(_themeColor).primaryColor,
+      primaryColorLight:
+          ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
+      colorScheme: theme.colorScheme.copyWith(
+        primary: ThemeColors.getCustomTheme(_themeColor).primaryColor,
+        secondary: ThemeColors.getCustomTheme(_themeColor).primaryColorLight,
+      ),
+    );
   }
 
   Future<void> updateColorMode(ColorMode colorMode) async {
