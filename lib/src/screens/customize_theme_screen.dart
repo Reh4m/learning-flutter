@@ -16,15 +16,25 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
   Future<void> changeColorMode(ColorMode mode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    ThemeColor currentThemeColor = GlobalValues.themeColor.value;
+
+    CustomTheme currentCustomTheme = ThemeManager.getTheme(currentThemeColor);
+
     if (mode == ColorMode.light) {
       GlobalValues.colorMode.value = ColorMode.light;
-      GlobalValues.themeApp.value = AppTheme.lightTheme;
+      GlobalValues.themeApp.value = ThemeManager.getThemeInstance(
+        currentCustomTheme,
+        ColorMode.light,
+      );
       await prefs.setString('theme', 'light');
     }
 
     if (mode == ColorMode.dark) {
       GlobalValues.colorMode.value = ColorMode.dark;
-      GlobalValues.themeApp.value = AppTheme.darkTheme;
+      GlobalValues.themeApp.value = ThemeManager.getThemeInstance(
+        currentCustomTheme,
+        ColorMode.dark,
+      );
       await prefs.setString('theme', 'dark');
     }
   }
