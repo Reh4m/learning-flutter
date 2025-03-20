@@ -54,20 +54,20 @@ class ThemeManager {
   };
 
   /// Devuelve el ThemeData correspondiente al tema seleccionado
-  static ThemeData getTheme(ThemeColor themeColor) {
+  static CustomTheme getTheme(ThemeColor themeColor) {
     final colors = _themeColors[themeColor]!;
 
-    return ThemeData(
+    return CustomTheme(
       primaryColor: colors.primaryColor,
       primaryColorLight: colors.primaryColorLight,
     );
   }
 
   /// Getters para los temas
-  static ThemeData get defaultTheme => getTheme(ThemeColor.defaultTheme);
-  static ThemeData get sunsetOrangeTheme => getTheme(ThemeColor.sunsetOrange);
-  static ThemeData get emeraldGreenTheme => getTheme(ThemeColor.emeraldGreen);
-  static ThemeData get royalPurpleTheme => getTheme(ThemeColor.royalPurple);
-  static ThemeData get goldenYellowTheme => getTheme(ThemeColor.goldenYellow);
-  static ThemeData get midnightTheme => getTheme(ThemeColor.midnight);
+  static CustomTheme get defaultTheme => getTheme(ThemeColor.defaultTheme);
+  static CustomTheme get sunsetOrangeTheme => getTheme(ThemeColor.sunsetOrange);
+  static CustomTheme get emeraldGreenTheme => getTheme(ThemeColor.emeraldGreen);
+  static CustomTheme get royalPurpleTheme => getTheme(ThemeColor.royalPurple);
+  static CustomTheme get goldenYellowTheme => getTheme(ThemeColor.goldenYellow);
+  static CustomTheme get midnightTheme => getTheme(ThemeColor.midnight);
 }
