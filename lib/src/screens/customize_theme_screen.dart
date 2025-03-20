@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
-import 'package:learning_flutter/src/utils/global_values.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -182,169 +181,160 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          ValueListenableBuilder(
-            valueListenable: GlobalValues.themeColor,
-            builder:
-                (context, value, child) => Wrap(
-                  spacing: 10,
-                  children: <Widget>[
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.defaultTheme);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.defaultTheme
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
-                      label: Text(
-                        'Default',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor ==
-                                      ThemeColor.defaultTheme
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.sunsetOrange);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.sunsetOrange
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
-                      label: Text(
-                        'Sunset orange',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor ==
-                                      ThemeColor.sunsetOrange
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.emeraldGreen);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.emeraldGreen
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
-                      label: Text(
-                        'Emerald green',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor ==
-                                      ThemeColor.emeraldGreen
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.royalPurple);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.royalPurple
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
-                      label: Text(
-                        'Royal purple',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor == ThemeColor.royalPurple
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.goldenYellow);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.goldenYellow
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
-                      label: Text(
-                        'Golden yellow',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor ==
-                                      ThemeColor.goldenYellow
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                    ActionChip(
-                      onPressed: () {
-                        themeProvider.updateThemeColor(ThemeColor.midnightDark);
-                      },
-                      backgroundColor:
-                          themeProvider.themeColor == ThemeColor.midnightDark
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).colorScheme.surface,
-                      avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
-                      label: Text(
-                        'Midnight dark',
-                        style: TextStyle(
-                          color:
-                              themeProvider.themeColor ==
-                                      ThemeColor.midnightDark
-                                  ? LightTheme.textPrimary
-                                  : null,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: BorderSide.none,
-                    ),
-                  ],
+          Wrap(
+            spacing: 10,
+            children: <Widget>[
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.defaultTheme);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.defaultTheme
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFF007AAD)),
+                label: Text(
+                  'Default',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.defaultTheme
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.sunsetOrange);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.sunsetOrange
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFFFF5733)),
+                label: Text(
+                  'Sunset orange',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.sunsetOrange
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.emeraldGreen);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.emeraldGreen
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFF2ECC71)),
+                label: Text(
+                  'Emerald green',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.emeraldGreen
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.royalPurple);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.royalPurple
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFF6C5CE7)),
+                label: Text(
+                  'Royal purple',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.royalPurple
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.goldenYellow);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.goldenYellow
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFFFFC300)),
+                label: Text(
+                  'Golden yellow',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.goldenYellow
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+              ActionChip(
+                onPressed: () {
+                  themeProvider.updateThemeColor(ThemeColor.midnightDark);
+                },
+                backgroundColor:
+                    themeProvider.themeColor == ThemeColor.midnightDark
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).colorScheme.surface,
+                avatar: CircleAvatar(backgroundColor: Color(0xFF212529)),
+                label: Text(
+                  'Midnight dark',
+                  style: TextStyle(
+                    color:
+                        themeProvider.themeColor == ThemeColor.midnightDark
+                            ? LightTheme.textPrimary
+                            : null,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                side: BorderSide.none,
+              ),
+            ],
           ),
         ],
       ),
