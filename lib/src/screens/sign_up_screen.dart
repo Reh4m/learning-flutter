@@ -27,6 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool showPassword1 = false;
   bool showPassword2 = false;
 
+  bool isLoading = false;
+
   Future _pickProfileImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -45,6 +47,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
+  void simulateRegister() {
+    if (!_signUpFormKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in the required fields')),
+      );
+
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+
+      saveLoginStatus(true);
+
+      if (!mounted) return;
+
+      Navigator.pushNamed(context, '/');
+    });
   }
 
   @override
@@ -134,6 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        enabled: !isLoading,
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
@@ -148,6 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        enabled: !isLoading,
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
@@ -174,6 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        enabled: !isLoading,
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
@@ -205,24 +236,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        enabled: !isLoading,
                       ),
                       const SizedBox(height: 20.0),
                       MaterialButton(
-                        onPressed: () {
-                          if (_signUpFormKey.currentState!.validate()) {
-                            saveLoginStatus(true);
-
-                            Navigator.pushNamed(context, '/');
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Please fill in the required fields',
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                        onPressed: !isLoading ? simulateRegister : null,
                         color: Theme.of(context).primaryColor,
                         textColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -231,7 +249,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         elevation: 0.0,
                         minWidth: double.infinity,
-                        child: const Text('Sign Up'),
+                        child:
+                            isLoading
+                                ? SizedBox(
+                                  height: 25.0,
+                                  width: 25.0,
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                    strokeWidth: 3.0,
+                                  ),
+                                )
+                                : const Text('Sign Up'),
                       ),
                       const SizedBox(height: 20.0),
                       Row(

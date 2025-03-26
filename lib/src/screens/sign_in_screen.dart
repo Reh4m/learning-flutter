@@ -17,11 +17,38 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController passwordController = TextEditingController();
 
   bool showPassword = false;
+  bool isLoading = false;
 
   Future<void> saveLoginStatus(bool isLoggedIn) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
+  void simulateLogin() {
+    if (!_signInFormKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in the required fields')),
+      );
+
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+
+      saveLoginStatus(true);
+
+      if (!mounted) return;
+
+      Navigator.pushNamed(context, '/');
+    });
   }
 
   @override
@@ -55,6 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                         return null;
                       },
+                      enabled: !isLoading,
                     ),
                     const SizedBox(height: 20.0),
                     TextFormField(
@@ -81,24 +109,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                         return null;
                       },
+                      enabled: !isLoading,
                     ),
                     const SizedBox(height: 20.0),
                     MaterialButton(
-                      onPressed: () {
-                        if (_signInFormKey.currentState!.validate()) {
-                          saveLoginStatus(true);
-
-                          Navigator.pushNamed(context, '/');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Please fill in the required fields',
-                              ),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: !isLoading ? simulateLogin : null,
                       color: Theme.of(context).primaryColor,
                       textColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -107,7 +122,17 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       elevation: 0.0,
                       minWidth: double.infinity,
-                      child: const Text('Sign In'),
+                      child:
+                          isLoading
+                              ? SizedBox(
+                                height: 25.0,
+                                width: 25.0,
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                  strokeWidth: 3.0,
+                                ),
+                              )
+                              : const Text('Sign In'),
                     ),
                     const SizedBox(height: 20.0),
                     Row(
