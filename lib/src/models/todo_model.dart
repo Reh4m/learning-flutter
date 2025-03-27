@@ -15,23 +15,15 @@ class TodoModel {
     required this.status,
   });
 
-  factory TodoModel.fromJson(Map<String, dynamic> json) {
+  factory TodoModel.fromMap(Map<String, dynamic> data) {
     return TodoModel(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      date: json['date'],
-      status: json['status'],
+      id: data['id'],
+      title: data['title'],
+      description: data['description'],
+      date: data['date'],
+      status: TodoStatus.values.firstWhere(
+        (e) => e.toString() == data['status'],
+      ),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'date': date,
-      'status': status,
-    };
   }
 }
