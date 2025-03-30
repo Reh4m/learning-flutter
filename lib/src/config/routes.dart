@@ -19,7 +19,7 @@ class Routes {
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case '/customize-theme':
         return MaterialPageRoute(builder: (_) => CustomizeThemeScreen());
-      case '/popular-screen':
+      case '/popular-movies':
         return MaterialPageRoute(builder: (_) => PopularScreen());
       default:
         return MaterialPageRoute(

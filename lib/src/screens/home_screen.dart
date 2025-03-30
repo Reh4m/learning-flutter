@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
               leading: Icon(Icons.movie_outlined),
               title: Text('Popular movies'),
               onTap: () {
-                Navigator.pushNamed(context, '/popular-screen');
+                Navigator.pushNamed(context, '/popular-movies');
               },
             ),
           ],
