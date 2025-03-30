@@ -1,11 +1,11 @@
-enum TodoStatus { done, notDone, inProgress }
+// enum TodoStatus { done, notDone, inProgress }
 
 class TodoModel {
   final int id;
   final String title;
   final String description;
   final String date;
-  final TodoStatus status;
+  final bool status;
 
   TodoModel({
     required this.id,
@@ -21,9 +21,7 @@ class TodoModel {
       title: data['title'],
       description: data['description'],
       date: data['date'],
-      status: TodoStatus.values.firstWhere(
-        (e) => e.toString() == data['status'],
-      ),
+      status: false,
     );
   }
 }
