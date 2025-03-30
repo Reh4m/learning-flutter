@@ -43,6 +43,13 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/customize-theme');
               },
             ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text('Todo List'),
+              onTap: () {
+                Navigator.pushNamed(context, '/todo-list');
+              },
+            ),
           ],
         ),
       ),
