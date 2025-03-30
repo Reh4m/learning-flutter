@@ -11,12 +11,12 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  TodoProvider? todoProvider;
+  late TodoProvider? todoProvider;
 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _statusController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
 
   @override
   void initState() {
@@ -48,19 +48,35 @@ class _TodoScreenState extends State<TodoScreen> {
               padding: EdgeInsets.all(10),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                TodoModel todo = snapshot.data![index];
+                TodoModel todoTask = snapshot.data![index];
 
                 return Container(
-                  decoration: BoxDecoration(color: Colors.grey),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   height: 150,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       ListTile(
-                        title: Text(todo.title),
-                        subtitle: Text(todo.date),
+                        title: Text(
+                          todoTask.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          todoTask.date,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                         trailing: Builder(
                           builder: (context) {
-                            if (todo.status == TodoStatus.done) {
+                            if (todoTask.status) {
                               return const Icon(
                                 Icons.check,
                                 color: Colors.green,
@@ -71,95 +87,30 @@ class _TodoScreenState extends State<TodoScreen> {
                           },
                         ),
                       ),
-                      Text(todo.description),
+                      Text(todoTask.description),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: () {
-                              _titleController.text = todo.title;
-                              _descriptionController.text = todo.description;
-                              _dateController.text = todo.date;
-                              _statusController.text = todo.status.toString();
+                              _titleController.text = todoTask.title;
+                              _descriptionController.text =
+                                  todoTask.description;
+                              _dateController.text = todoTask.date;
+                              _statusController.text =
+                                  todoTask.status.toString();
 
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Edit Todo'),
-                                    content: Column(
-                                      children: <Widget>[
-                                        TextField(
-                                          controller: _titleController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Title',
-                                          ),
-                                        ),
-                                        TextField(
-                                          controller: _descriptionController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Description',
-                                          ),
-                                        ),
-                                        TextField(
-                                          controller: _dateController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Date',
-                                          ),
-                                        ),
-                                        TextField(
-                                          controller: _statusController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Status',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          TodoModel updatedTodo = TodoModel(
-                                            id: todo.id,
-                                            title: _titleController.text,
-                                            description:
-                                                _descriptionController.text,
-                                            date: _dateController.text,
-                                            status:
-                                                _statusController.text == 'done'
-                                                    ? TodoStatus.done
-                                                    : TodoStatus.notDone,
-                                          );
-
-                                          await todoProvider!.update(
-                                            updatedTodo as Map<String, dynamic>,
-                                          );
-
-                                          setState(() {});
-
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Save'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              _dialogBuilder(context, todoTask.id);
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete),
                             onPressed: () async {
-                              await todoProvider!.delete(todo.id);
+                              await todoProvider!.delete(todoTask.id);
 
                               setState(() {});
                             },
+                            icon: const Icon(Icons.delete),
                           ),
                         ],
                       ),
@@ -233,26 +184,31 @@ class _TodoScreenState extends State<TodoScreen> {
                             'title': _titleController.text,
                             'description': _descriptionController.text,
                             'date': _dateController.text,
-                            'status': TodoStatus.notDone,
+                            'status': false,
                           })
                           .then((value) {
                             if (value > 0) {
-                              setState(() {});
-                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Tarea agregada')),
+                              );
                             }
                           });
                     } else {
                       todoProvider!
                           .update({
+                            'id': idTodo,
                             'title': _titleController.text,
                             'description': _descriptionController.text,
                             'date': _dateController.text,
-                            'status': TodoStatus.notDone,
+                            'status': false,
                           })
                           .then((value) {
                             if (value > 0) {
-                              setState(() {});
-                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Tarea actualizada'),
+                                ),
+                              );
                             }
                           });
                     }
