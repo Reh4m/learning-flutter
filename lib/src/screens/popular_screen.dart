@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/api/popular_api.dart';
+import 'package:learning_flutter/src/models/popular_model.dart';
 
 class PopularScreen extends StatefulWidget {
   const PopularScreen({super.key});
@@ -39,6 +40,7 @@ class _PopularScreenState extends State<PopularScreen> {
         }
 
         return GridView.builder(
+          padding: const EdgeInsets.all(20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 10,
@@ -46,40 +48,41 @@ class _PopularScreenState extends State<PopularScreen> {
             childAspectRatio: 0.55,
           ),
           itemCount: snapshot.data?.length,
-          padding: const EdgeInsets.all(20),
           itemBuilder: (context, index) {
-            final movie = snapshot.data?[index];
-
-            return InkWell(
-              onTap: () {},
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          'https://image.tmdb.org/t/p/w500${movie!.posterPath}',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    movie.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(movie.releaseDate.toString().substring(0, 4)),
-                ],
-              ),
-            );
+            return _popularMovieItem(snapshot.data![index]);
           },
         );
       },
+    );
+  }
+
+  Widget _popularMovieItem(PopularModel popularMovie) {
+    return InkWell(
+      onTap: () {},
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 250,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              image: DecorationImage(
+                image: NetworkImage(
+                  'https://image.tmdb.org/t/p/w500${popularMovie.posterPath}',
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            popularMovie.title,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Text(popularMovie.releaseDate.toString().substring(0, 4)),
+        ],
+      ),
     );
   }
 }
