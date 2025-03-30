@@ -16,6 +16,7 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Customize Theme')),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
@@ -26,7 +27,6 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTopBar(),
                   _buildSelectTheme(),
                   _buildColorPicker(),
                   _buildSelectFont(),
@@ -35,27 +35,6 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildTopBar() {
-    return Container(
-      margin: const EdgeInsets.only(top: 25, left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios),
-            padding: const EdgeInsets.all(10.0),
-          ),
-          Text(
-            'Customize Theme',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-        ],
       ),
     );
   }
