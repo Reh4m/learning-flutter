@@ -65,6 +65,17 @@ class TodoProvider {
     );
   }
 
+  Future<int> toggleStatus(int id, bool status) async {
+    final db = await database;
+
+    return db!.update(
+      _tableName,
+      {'status': status},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<int> delete(int id) async {
     final db = await database;
 
