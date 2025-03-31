@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:learning_flutter/src/database/todo_provider.dart';
 import 'package:learning_flutter/src/models/todo_model.dart';
+import 'package:learning_flutter/src/themes/light_theme.dart';
+
+class GlobalValues {
+  static ValueNotifier updateTodoList = ValueNotifier(false);
+}
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -16,7 +22,6 @@ class _TodoScreenState extends State<TodoScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
 
   @override
   void initState() {
@@ -31,91 +36,141 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(title: const Text('Todo List')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _dialogBuilder(context),
+        shape: CircleBorder(),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: FutureBuilder(
-          future: todoProvider!.fetch(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return Text(snapshot.error.toString());
+        child: ValueListenableBuilder(
+          valueListenable: GlobalValues.updateTodoList,
+          builder: (context, value, child) {
+            return FutureBuilder(
+              future: todoProvider!.fetch(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return Text(snapshot.error.toString());
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            return ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              padding: EdgeInsets.all(10),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                TodoModel todoTask = snapshot.data![index];
+                return ListView.builder(
+                  padding: EdgeInsets.all(10),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    TodoModel todoTask = snapshot.data![index];
 
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  height: 150,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      ListTile(
+                    return Slidable(
+                      key: Key(todoTask.id.toString()),
+                      closeOnScroll: true,
+                      // mark as complete
+                      startActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: <Widget>[
+                          SlidableAction(
+                            onPressed: (context) {
+                              todoProvider!
+                                  .toggleStatus(todoTask.id, !todoTask.status)
+                                  .then((value) {
+                                    if (value > 0) {
+                                      GlobalValues.updateTodoList.value =
+                                          !GlobalValues.updateTodoList.value;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            todoTask.status
+                                                ? 'Task completed'
+                                                : 'Task uncompleted',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
+                            },
+                            backgroundColor:
+                                todoTask.status
+                                    ? LightTheme.warning
+                                    : LightTheme.success,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            icon:
+                                todoTask.status
+                                    ? Icons.cancel
+                                    : Icons.check_circle,
+                            label: todoTask.status ? 'Uncomplete' : 'Complete',
+                          ),
+                        ],
+                      ),
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: <Widget>[
+                          SlidableAction(
+                            onPressed: (context) {
+                              _titleController.text = todoTask.title;
+                              _descriptionController.text =
+                                  todoTask.description;
+                              _dateController.text = todoTask.date;
+                              _dialogBuilder(context, todoTask.id);
+                            },
+                            backgroundColor: LightTheme.info,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            icon: Icons.edit,
+                            label: 'Edit',
+                          ),
+                          SlidableAction(
+                            onPressed: (context) {
+                              todoProvider!.delete(todoTask.id).then((value) {
+                                if (value > 0) {
+                                  GlobalValues.updateTodoList.value =
+                                      !GlobalValues.updateTodoList.value;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Task deleted'),
+                                    ),
+                                  );
+                                }
+                              });
+                            },
+                            backgroundColor: LightTheme.warning,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        isThreeLine: true,
+                        leading: Icon(
+                          todoTask.status ? Icons.check_circle : Icons.cancel,
+                          color:
+                              todoTask.status
+                                  ? LightTheme.success
+                                  : LightTheme.warning,
+                        ),
                         title: Text(
                           todoTask.title,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
+                            decoration:
+                                todoTask.status
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
                           ),
                         ),
                         subtitle: Text(
-                          todoTask.date,
-                          style: TextStyle(
+                          todoTask.description,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        trailing: Builder(
-                          builder: (context) {
-                            if (todoTask.status) {
-                              return const Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              );
-                            }
-
-                            return const Icon(Icons.close, color: Colors.red);
-                          },
-                        ),
+                        trailing: Text(todoTask.date),
                       ),
-                      Text(todoTask.description),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              _titleController.text = todoTask.title;
-                              _descriptionController.text =
-                                  todoTask.description;
-                              _dateController.text = todoTask.date;
-                              _statusController.text =
-                                  todoTask.status.toString();
-
-                              _dialogBuilder(context, todoTask.id);
-                            },
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await todoProvider!.delete(todoTask.id);
-
-                              setState(() {});
-                            },
-                            icon: const Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
             );
@@ -171,12 +226,8 @@ class _TodoScreenState extends State<TodoScreen> {
                     }
                   },
                 ),
-                TextFormField(
-                  controller: _statusController,
-                  decoration: InputDecoration(hintText: 'Estatus de la tarea'),
-                ),
                 Divider(),
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
                     if (idTodo == 0) {
                       todoProvider!
@@ -188,6 +239,8 @@ class _TodoScreenState extends State<TodoScreen> {
                           })
                           .then((value) {
                             if (value > 0) {
+                              GlobalValues.updateTodoList.value =
+                                  !GlobalValues.updateTodoList.value;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Tarea agregada')),
                               );
@@ -200,10 +253,11 @@ class _TodoScreenState extends State<TodoScreen> {
                             'title': _titleController.text,
                             'description': _descriptionController.text,
                             'date': _dateController.text,
-                            'status': false,
                           })
                           .then((value) {
                             if (value > 0) {
+                              GlobalValues.updateTodoList.value =
+                                  !GlobalValues.updateTodoList.value;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Tarea actualizada'),
@@ -216,7 +270,6 @@ class _TodoScreenState extends State<TodoScreen> {
                     _titleController.clear();
                     _descriptionController.clear();
                     _dateController.clear();
-                    _statusController.clear();
                     Navigator.pop(context);
                   },
                   child: Text('Guardar'),
