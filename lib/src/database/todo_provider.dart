@@ -32,7 +32,7 @@ class TodoProvider {
             title VARCHAR(255),
             description TEXT,
             date VARCHAR(16),
-            status VARCHAR(16)
+            status BOOLEAN
           )
         ''';
 
