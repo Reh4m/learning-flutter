@@ -20,7 +20,7 @@ class DarkTheme {
   static const Color greyLighten2 = Color(0xFF3A3A3A);
   static const Color greyLighten3 = Color(0xFF505050);
 
-  static const Color success = Color(0xFF34C759);
+  static const Color success = Color(0xFF5BBA6F);
   static const Color warning = Color(0xFFFFA726);
   static const Color error = Color(0xFFEF5350);
   static const Color info = Color(0xFF5AC8FA);
