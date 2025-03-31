@@ -1,5 +1,3 @@
-// enum TodoStatus { done, notDone, inProgress }
-
 class TodoModel {
   final int id;
   final String title;
@@ -21,7 +19,7 @@ class TodoModel {
       title: data['title'],
       description: data['description'],
       date: data['date'],
-      status: false,
+      status: data['status'] == '1',
     );
   }
 }
