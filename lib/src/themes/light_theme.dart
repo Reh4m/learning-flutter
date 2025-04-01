@@ -21,7 +21,7 @@ class LightTheme {
   static const Color greyLighten2 = Color(0xFFEDEDED);
   static const Color greyLighten3 = Color(0xFFD8D8D8);
 
-  static const Color success = Color(0xFF34C759);
+  static const Color success = Color(0xFF5BBA6F);
   static const Color warning = Color(0xFFFF8A80);
   static const Color error = Color(0xFFEF5350);
   static const Color info = Color(0xFF5AC8FA);

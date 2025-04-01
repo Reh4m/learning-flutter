@@ -4,6 +4,8 @@ import 'package:learning_flutter/src/screens/home_screen.dart';
 import 'package:learning_flutter/src/screens/sign_in_screen.dart';
 import 'package:learning_flutter/src/screens/sign_up_screen.dart';
 import 'package:learning_flutter/src/screens/splash_screen.dart';
+import 'package:learning_flutter/src/screens/todo_form_screen.dart';
+import 'package:learning_flutter/src/screens/todo_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,6 +20,10 @@ class Routes {
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case '/customize-theme':
         return MaterialPageRoute(builder: (_) => CustomizeThemeScreen());
+      case '/todo-list':
+        return MaterialPageRoute(builder: (_) => TodoScreen());
+      case '/todo-form':
+        return MaterialPageRoute(builder: (_) => TodoFormScreen());
       default:
         return MaterialPageRoute(
           builder:
