@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/screens/customize_theme_screen.dart';
 import 'package:learning_flutter/src/screens/home_screen.dart';
+import 'package:learning_flutter/src/screens/popular_screen.dart';
 import 'package:learning_flutter/src/screens/sign_in_screen.dart';
 import 'package:learning_flutter/src/screens/sign_up_screen.dart';
 import 'package:learning_flutter/src/screens/splash_screen.dart';
@@ -24,6 +25,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => TodoScreen());
       case '/todo-form':
         return MaterialPageRoute(builder: (_) => TodoFormScreen());
+      case '/popular-movies':
+        return MaterialPageRoute(builder: (_) => PopularScreen());
       default:
         return MaterialPageRoute(
           builder:
