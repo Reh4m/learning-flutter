@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/screens/customize_theme_screen.dart';
 import 'package:learning_flutter/src/screens/home_screen.dart';
+import 'package:learning_flutter/src/screens/popular_details_screen.dart';
 import 'package:learning_flutter/src/screens/popular_screen.dart';
 import 'package:learning_flutter/src/screens/sign_in_screen.dart';
 import 'package:learning_flutter/src/screens/sign_up_screen.dart';
@@ -21,6 +22,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => CustomizeThemeScreen());
       case '/popular-movies':
         return MaterialPageRoute(builder: (_) => PopularScreen());
+      case '/popular-details':
+        return MaterialPageRoute(builder: (_) => PopularDetailsScreen());
       default:
         return MaterialPageRoute(
           builder:
