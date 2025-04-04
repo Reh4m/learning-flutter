@@ -48,7 +48,7 @@ class _PopularDetailsScreenState extends State<PopularDetailsScreen> {
 
   Widget _buildMoviePoster(String posterPath) {
     return Container(
-      height: 400,
+      height: MediaQuery.of(context).size.height * 0.5,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: NetworkImage('https://image.tmdb.org/t/p/w500/$posterPath'),
