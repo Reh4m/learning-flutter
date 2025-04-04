@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class LightTheme {
-  static const Color backgroundColor = Color(0xFFE0E0E0);
+  static const Color backgroundColor = Color(0xF9F9F9F9);
   static const Color cardBackgroundColor = Color(0xFFFFFFFF);
 
   static Color primaryColor = Color(
