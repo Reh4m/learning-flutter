@@ -58,7 +58,12 @@ class _PopularScreenState extends State<PopularScreen> {
 
   Widget _popularMovieItem(PopularModel popularMovie) {
     return InkWell(
-      onTap: () {},
+      onTap:
+          () => Navigator.pushNamed(
+            context,
+            '/popular-details',
+            arguments: popularMovie,
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
