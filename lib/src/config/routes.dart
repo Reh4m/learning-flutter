@@ -10,6 +10,18 @@ import 'package:learning_flutter/src/screens/todo_form_screen.dart';
 import 'package:learning_flutter/src/screens/todo_screen.dart';
 
 class Routes {
+  static Map<String, WidgetBuilder> routes = {
+    '/': (_) => HomeScreen(),
+    '/splash-screen': (_) => SplashScreen(),
+    '/sign-in': (_) => SignInScreen(),
+    '/sign-up': (_) => SignUpScreen(),
+    '/customize-theme': (_) => CustomizeThemeScreen(),
+    '/todo-list': (_) => TodoScreen(),
+    '/todo-form': (_) => TodoFormScreen(),
+    '/popular-movies': (_) => PopularScreen(),
+    '/popular-details': (_) => PopularDetailsScreen(),
+  };
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
