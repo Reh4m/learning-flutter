@@ -160,8 +160,6 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
                                   : null,
                       onTap: _selectDate,
                     ),
-                    SizedBox(height: 20),
-                    SizedBox(height: 20),
                   ],
                 ),
               ),
