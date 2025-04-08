@@ -60,13 +60,12 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
       'title': _titleController.text,
       'description': _descriptionController.text,
       'date': _dateController.text,
-      'status': false,
     };
 
     if (todoTask == null) {
       await _insertTask(taskData);
     } else {
-      await _updateTask(taskData);
+      await _updateTask({'id': todoTask!.id, ...taskData});
     }
   }
 
@@ -75,6 +74,7 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
 
     if (result > 0) {
       GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
+
       _showSnackBar('Task added');
     }
   }
@@ -84,7 +84,10 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
 
     if (result > 0) {
       GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
+
       _showSnackBar('Task updated');
+    } else {
+      _showSnackBar('Failed to update task');
     }
   }
 
