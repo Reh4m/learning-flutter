@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:learning_flutter/src/api/popular_api.dart';
 import 'package:learning_flutter/src/models/popular_model.dart';
 
@@ -85,7 +86,7 @@ class _PopularScreenState extends State<PopularScreen> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Text(popularMovie.releaseDate.toString().substring(0, 4)),
+          Text(DateFormat('yyyy').format(popularMovie.releaseDate)),
         ],
       ),
     );
