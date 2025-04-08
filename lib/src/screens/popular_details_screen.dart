@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:learning_flutter/src/models/popular_model.dart';
 
 class PopularDetailsScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _PopularDetailsScreenState extends State<PopularDetailsScreen> {
           Column(
             children: [
               _buildMovieHeader(popularMovie),
+              _buildMovieDetails(popularMovie),
               _buildMovieOverview(popularMovie),
             ],
           ),
@@ -47,12 +49,15 @@ class _PopularDetailsScreenState extends State<PopularDetailsScreen> {
   }
 
   Widget _buildMoviePoster(String posterPath) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.5,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage('https://image.tmdb.org/t/p/w500/$posterPath'),
-          fit: BoxFit.cover,
+    return Hero(
+      tag: posterPath,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('https://image.tmdb.org/t/p/w500/$posterPath'),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
@@ -162,9 +167,78 @@ class _PopularDetailsScreenState extends State<PopularDetailsScreen> {
     );
   }
 
+  Widget _buildMovieDetails(PopularModel popularMovie) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Release Date',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  DateFormat('dd MMM yyyy').format(popularMovie.releaseDate),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Language',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  popularMovie.originalLanguage.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Genres',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  'Genre',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMovieOverview(PopularModel popularMovie) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
