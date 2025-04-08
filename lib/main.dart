@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.lightTheme,
       darkTheme: themeProvider.darkTheme,
       themeMode: themeProvider.themeMode,
-      onGenerateRoute: Routes.generateRoute,
+      routes: Routes.routes,
       initialRoute: '/splash-screen',
     );
   }
