@@ -19,7 +19,7 @@ class TodoModel {
       title: data['title'],
       description: data['description'],
       date: data['date'],
-      status: data['status'] == '1',
+      status: data['status'] == 1,
     );
   }
 }
