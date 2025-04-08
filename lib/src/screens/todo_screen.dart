@@ -27,7 +27,7 @@ class _TodoScreenState extends State<TodoScreen> {
       if (value > 0) {
         GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
 
-        _showSnackBar(todoTask.status ? 'Task completed' : 'Task uncompleted');
+        _showSnackBar(todoTask.status ? 'Task uncompleted' : 'Task completed');
       }
     });
   }
