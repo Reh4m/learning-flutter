@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/screens/settings/cutomize_theme/widgets/select_color_mode_widget.dart';
 import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
@@ -27,7 +28,7 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSelectTheme(),
+                  _buildSelectColorMode(),
                   _buildColorPicker(),
                   _buildSelectFont(),
                 ],
@@ -39,102 +40,10 @@ class _CustomizeThemeScreenState extends State<CustomizeThemeScreen> {
     );
   }
 
-  Widget _buildSelectTheme() {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
+  Widget _buildSelectColorMode() {
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'Color Mode',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Choose if app\'s appearance should be light or dark, or follow system settings',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: ElevatedButton(
-                  onPressed:
-                      () => themeProvider.updateThemeMode(ThemeMode.light),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor:
-                        themeProvider.themeMode == ThemeMode.light
-                            ? Theme.of(context).primaryColorLight
-                            : Theme.of(context).colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.light_mode),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Light mode',
-                          style: TextStyle(
-                            // color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed:
-                      () => themeProvider.updateThemeMode(ThemeMode.dark),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor:
-                        themeProvider.themeMode == ThemeMode.dark
-                            ? Theme.of(context).primaryColorLight
-                            : Theme.of(context).colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.dark_mode),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Dark mode',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      child: SelectColorModeWidget(),
     );
   }
 
