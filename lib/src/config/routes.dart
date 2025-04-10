@@ -6,8 +6,8 @@ import 'package:learning_flutter/src/screens/popular_screen.dart';
 import 'package:learning_flutter/src/screens/auth/sign_in_screen.dart';
 import 'package:learning_flutter/src/screens/auth/sign_up_screen.dart';
 import 'package:learning_flutter/src/screens/splash_screen.dart';
-import 'package:learning_flutter/src/screens/todo_form_screen.dart';
-import 'package:learning_flutter/src/screens/todo_screen.dart';
+import 'package:learning_flutter/src/screens/todo/todo_form_screen.dart';
+import 'package:learning_flutter/src/screens/todo/todo_screen.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> routes = {
