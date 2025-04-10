@@ -108,6 +108,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _buildEmailField() {
     return TextFormField(
       controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
       decoration: const InputDecoration(labelText: 'Email'),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -125,6 +127,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _buildPasswordField() {
     return TextFormField(
       controller: _passwordController,
+      keyboardType: TextInputType.visiblePassword,
+      textInputAction: TextInputAction.done,
       obscureText: !_showPassword,
       decoration: InputDecoration(
         labelText: 'Password',
@@ -144,6 +148,8 @@ class _SignInScreenState extends State<SignInScreen> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Password is required';
+        } else if (value.length < 6) {
+          return 'Password must be at least 6 characters';
         }
         return null;
       },
