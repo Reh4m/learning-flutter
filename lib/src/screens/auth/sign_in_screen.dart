@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/auth/sign_up_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -12,43 +11,54 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _signInFormKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  bool _showPassword = false;
+  bool _isLoading = false;
 
-  bool showPassword = false;
-  bool isLoading = false;
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
 
-  Future<void> saveLoginStatus(bool isLoggedIn) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    super.dispose();
+  }
+
+  Future<void> _saveLoginStatus(bool isLoggedIn) async {
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-  void simulateLogin() {
+  void _simulateLogin() {
     if (!_signInFormKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in the required fields')),
-      );
+      _showSnackBar('Please fill in the required fields');
 
       return;
     }
 
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
 
-      saveLoginStatus(true);
+      _saveLoginStatus(true);
 
       if (!mounted) return;
 
       Navigator.pushNamed(context, '/');
     });
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -61,103 +71,125 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'Sign In',
-                style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
-              ),
+              _buildTitle(),
               const SizedBox(height: 20.0),
-              Form(
-                key: _signInFormKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: emailController,
-                      decoration: InputDecoration(labelText: 'Email'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required';
-                        }
-                        if (!EmailValidator.validate(value)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
-                      enabled: !isLoading,
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: !showPassword,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            showPassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              showPassword = !showPassword;
-                            });
-                          },
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        }
-                        return null;
-                      },
-                      enabled: !isLoading,
-                    ),
-                    const SizedBox(height: 20.0),
-                    MaterialButton(
-                      onPressed: !isLoading ? simulateLogin : null,
-                      color: Theme.of(context).primaryColor,
-                      textColor: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 0.0,
-                      minWidth: double.infinity,
-                      child:
-                          isLoading
-                              ? SizedBox(
-                                height: 25.0,
-                                width: 25.0,
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                  strokeWidth: 3.0,
-                                ),
-                              )
-                              : const Text('Sign In'),
-                    ),
-                    const SizedBox(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Text('Don\'t have an account?'),
-                        TextButton(
-                          onPressed:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(),
-                                ),
-                              ),
-                          child: const Text('Sign Up'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              _buildSignInForm(),
+              const SizedBox(height: 20.0),
+              _buildSignUpPrompt(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return const Text(
+      'Welcome Back!',
+      style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildSignInForm() {
+    return Form(
+      key: _signInFormKey,
+      child: Column(
+        children: <Widget>[
+          _buildEmailField(),
+          const SizedBox(height: 20.0),
+          _buildPasswordField(),
+          const SizedBox(height: 20.0),
+          _buildSignInButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration: const InputDecoration(labelText: 'Email'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email is required';
+        }
+        if (!EmailValidator.validate(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+      enabled: !_isLoading,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: _passwordController,
+      obscureText: !_showPassword,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        suffixIcon: IconButton(
+          icon: Icon(
+            _showPassword
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+          ),
+          onPressed: () {
+            setState(() {
+              _showPassword = !_showPassword;
+            });
+          },
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password is required';
+        }
+        return null;
+      },
+      enabled: !_isLoading,
+    );
+  }
+
+  Widget _buildSignInButton() {
+    return TextButton(
+      onPressed: !_isLoading ? _simulateLogin : null,
+      style: TextButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        minimumSize: const Size(double.infinity, 0),
+      ),
+      child:
+          _isLoading
+              ? SizedBox(
+                height: 18.0,
+                width: 18.0,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  strokeWidth: 3.0,
+                ),
+              )
+              : const Text('Sign In'),
+    );
+  }
+
+  Widget _buildSignUpPrompt() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Don\'t have an account?'),
+        TextButton(
+          onPressed:
+              !_isLoading
+                  ? () => Navigator.pushNamed(context, '/sign-up')
+                  : null,
+          child: const Text('Sign Up'),
+        ),
+      ],
     );
   }
 }
