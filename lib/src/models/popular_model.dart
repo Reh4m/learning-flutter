@@ -1,6 +1,7 @@
 class PopularModel {
   int id;
   String backdropPath;
+  List<int> genres;
   String originalLanguage;
   String originalTitle;
   String overview;
@@ -14,6 +15,7 @@ class PopularModel {
   PopularModel({
     required this.id,
     required this.backdropPath,
+    required this.genres,
     required this.originalLanguage,
     required this.originalTitle,
     required this.overview,
@@ -27,8 +29,9 @@ class PopularModel {
 
   factory PopularModel.fromMap(Map<String, dynamic> data) {
     return PopularModel(
-      backdropPath: data['backdrop_path'],
       id: data['id'],
+      backdropPath: data['backdrop_path'],
+      genres: List<int>.from(data['genre_ids']),
       originalLanguage: data['original_language'],
       originalTitle: data['original_title'],
       overview: data['overview'],
