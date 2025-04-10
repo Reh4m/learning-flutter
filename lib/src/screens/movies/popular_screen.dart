@@ -69,15 +69,18 @@ class _PopularScreenState extends State<PopularScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 250,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://image.tmdb.org/t/p/w500${popularMovie.posterPath}',
+          Hero(
+            tag: popularMovie.posterPath,
+            child: Container(
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://image.tmdb.org/t/p/w500${popularMovie.posterPath}',
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
               ),
             ),
           ),
