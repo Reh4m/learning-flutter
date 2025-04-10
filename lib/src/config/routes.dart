@@ -3,8 +3,8 @@ import 'package:learning_flutter/src/screens/settings/customize_theme/index.dart
 import 'package:learning_flutter/src/screens/home_screen.dart';
 import 'package:learning_flutter/src/screens/popular_details_screen.dart';
 import 'package:learning_flutter/src/screens/popular_screen.dart';
-import 'package:learning_flutter/src/screens/sign_in_screen.dart';
-import 'package:learning_flutter/src/screens/sign_up_screen.dart';
+import 'package:learning_flutter/src/screens/auth/sign_in_screen.dart';
+import 'package:learning_flutter/src/screens/auth/sign_up_screen.dart';
 import 'package:learning_flutter/src/screens/splash_screen.dart';
 import 'package:learning_flutter/src/screens/todo_form_screen.dart';
 import 'package:learning_flutter/src/screens/todo_screen.dart';
