@@ -18,39 +18,23 @@ class CustomizeThemeScreen extends StatelessWidget {
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               dragStartBehavior: DragStartBehavior.down,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSelectColorMode(),
-                  _buildColorPicker(),
-                  _buildSelectFont(),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectColorModeWidget(),
+                    const SizedBox(height: 20),
+                    SelectCustomThemeWidget(),
+                    const SizedBox(height: 20),
+                    SelectCustomFontWidget(),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSelectColorMode() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: SelectColorModeWidget(),
-    );
-  }
-
-  Widget _buildColorPicker() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: SelectCustomThemeWidget(),
-    );
-  }
-
-  Widget _buildSelectFont() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: SelectCustomFontWidget(),
     );
   }
 }
