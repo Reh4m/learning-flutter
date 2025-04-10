@@ -67,6 +67,9 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
     } else {
       await _updateTask({'id': todoTask!.id, ...taskData});
     }
+
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
 
   Future<void> _insertTask(Map<String, dynamic> taskData) async {
@@ -119,88 +122,78 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(todoTask == null ? 'Add Task' : 'Edit Task')),
       body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              child: Form(
-                key: _taskFormKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: InputDecoration(labelText: 'Title'),
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Please enter title'
-                                  : null,
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(labelText: 'Description'),
-                      maxLines: 3,
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Please enter description'
-                                  : null,
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      readOnly: true,
-                      controller: _dateController,
-                      decoration: InputDecoration(hintText: 'Select Date'),
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Please select date'
-                                  : null,
-                      onTap: _selectDate,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            _buildBottomSheet(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [_buildForm(), _buildBottomSheet()],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBottomSheet() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            MaterialButton(
-              onPressed: () {
-                _saveTask();
+  Widget _buildForm() {
+    return Form(
+      key: _taskFormKey,
+      child: Column(
+        children: [
+          TextFormField(
+            controller: _titleController,
+            decoration: InputDecoration(labelText: 'Title'),
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please enter title'
+                        : null,
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            controller: _descriptionController,
+            decoration: InputDecoration(labelText: 'Description'),
+            maxLines: 3,
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please enter description'
+                        : null,
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            readOnly: true,
+            controller: _dateController,
+            decoration: InputDecoration(hintText: 'Select Date'),
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please select date'
+                        : null,
+            onTap: _selectDate,
+          ),
+        ],
+      ),
+    );
+  }
 
-                Navigator.pop(context);
-              },
-              color: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).colorScheme.onPrimary,
-              elevation: 0,
-              height: 50,
-              minWidth: double.infinity,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'Save Task',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
+  Widget _buildBottomSheet() {
+    return Positioned(bottom: 0, left: 0, right: 0, child: _buildSaveButton());
+  }
+
+  Widget _buildSaveButton() {
+    return TextButton(
+      onPressed: _saveTask,
+      style: TextButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        minimumSize: const Size(double.infinity, 0),
+      ),
+      child: Text(
+        'Save Task',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     );
   }
