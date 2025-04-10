@@ -303,14 +303,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child:
           _isLoading
               ? SizedBox(
-                height: 18.0,
-                width: 18.0,
+                height: 21.0,
+                width: 21.0,
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.onPrimary,
                   strokeWidth: 3.0,
                 ),
               )
-              : const Text('Sign Up'),
+              : const Text(
+                'Sign Up',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
     );
   }
 
