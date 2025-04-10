@@ -38,14 +38,14 @@ class _SelectColorModeWidgetState extends State<SelectColorModeWidget> {
   Widget _buildTitle() {
     return const Text(
       'Color Mode',
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
     );
   }
 
   Widget _buildDescription() {
     return const Text(
       'Choose if app\'s appearance should be light or dark, or follow system settings',
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, height: 1.5),
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
     );
   }
 

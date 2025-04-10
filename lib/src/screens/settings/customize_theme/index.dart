@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/settings/cutomize_theme/widgets/select_color_mode_widget.dart';
-import 'package:learning_flutter/src/screens/settings/cutomize_theme/widgets/select_custom_theme_widget.dart';
+import 'package:learning_flutter/src/screens/settings/customize_theme/widgets/select_color_mode_widget.dart';
+import 'package:learning_flutter/src/screens/settings/customize_theme/widgets/select_custom_theme_widget.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
