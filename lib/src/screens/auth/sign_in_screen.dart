@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/sign_up_screen.dart';
+import 'package:learning_flutter/src/screens/auth/sign_up_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
