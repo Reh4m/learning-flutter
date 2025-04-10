@@ -11,7 +11,7 @@ class PopularScreen extends StatefulWidget {
 }
 
 class _PopularScreenState extends State<PopularScreen> {
-  PopularApi? popular;
+  late PopularApi popular;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _PopularScreenState extends State<PopularScreen> {
 
   Widget _buildPopularList() {
     return FutureBuilder(
-      future: popular?.getHttpPopular(),
+      future: popular.getHttpPopular(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -65,6 +65,7 @@ class _PopularScreenState extends State<PopularScreen> {
             '/popular-details',
             arguments: popularMovie,
           ),
+      borderRadius: BorderRadius.all(Radius.circular(15)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
