@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +72,11 @@ class _SelectCustomThemeWidgetState extends State<SelectCustomThemeWidget> {
       avatar: CircleAvatar(backgroundColor: customTheme.primaryColor),
       label: Text(
         customTheme.colorName,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        style: TextStyle(
+          color: isSelected ? LightTheme.textPrimary : null,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       side: BorderSide.none,
