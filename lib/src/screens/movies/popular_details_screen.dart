@@ -178,60 +178,43 @@ class _PopularDetailsScreenState extends State<PopularDetailsScreen> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Release Date',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  DateFormat('dd MMM yyyy').format(popularMovie.releaseDate),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            _buildDetailColumn(
+              'Release Date',
+              DateFormat('dd MMM yyyy').format(popularMovie.releaseDate),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Language',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  popularMovie.originalLanguage.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            _buildDetailColumn(
+              'Language',
+              popularMovie.originalLanguage.toUpperCase(),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Genres',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  'Genre',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            _buildDetailColumn(
+              'Genres',
+              popularMovie.genres != null
+                  ? popularMovie.genres!.map((genre) => genre.name).join(', ')
+                  : 'N/A',
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailColumn(String title, String value) {
+    return Flexible(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }
