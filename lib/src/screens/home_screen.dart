@@ -102,9 +102,21 @@ class HomeScreen extends StatelessWidget {
                   themeProvider,
                   isDarkMode ? ThemeMode.light : ThemeMode.dark,
                 ),
-            icon: Icon(
-              isDarkMode ? Icons.light_mode : Icons.dark_mode,
-              color: Theme.of(context).colorScheme.onPrimary,
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              transitionBuilder:
+                  (child, anim) => RotationTransition(
+                    turns:
+                        child.key == ValueKey('light')
+                            ? Tween<double>(begin: 1, end: 0.75).animate(anim)
+                            : Tween<double>(begin: 0.75, end: 1).animate(anim),
+                    child: ScaleTransition(scale: anim, child: child),
+                  ),
+              child: Icon(
+                key: isDarkMode ? ValueKey('light') : ValueKey('dark'),
+                isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
           ),
         ),
