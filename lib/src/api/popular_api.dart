@@ -12,7 +12,7 @@ class PopularApi {
         'https://api.themoviedb.org/3/genre/movie/list?api_key=${secret.themoviedbApi}&language=en-US',
       );
 
-      List genres = response.data['genres'];
+      final genres = response.data['genres'] as List;
 
       return genres.map((genre) => MovieGenreModel.fromMap(genre)).toList();
     } catch (e) {
@@ -22,13 +22,23 @@ class PopularApi {
 
   Future<List<PopularModel>> getHttpPopular() async {
     try {
+      final genres = await getHttpGenres();
+
       Response response = await dio.get(
         'https://api.themoviedb.org/3/movie/popular?api_key=${secret.themoviedbApi}&language=en-US&page=1',
       );
 
-      List popularMovies = response.data['results'];
+      final result = response.data['results'] as List;
 
-      return popularMovies.map((movie) => PopularModel.fromMap(movie)).toList();
+      final popularMovies =
+          result.map((movie) => PopularModel.fromMap(movie)).toList();
+
+      for (var movie in popularMovies) {
+        movie.genres =
+            genres.where((genre) => movie.genresId.contains(genre.id)).toList();
+      }
+
+      return popularMovies;
     } catch (e) {
       return [];
     }
