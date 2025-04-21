@@ -6,10 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', false);
+
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacementNamed(context, '/sign-in');
   }
 
   void _switchColorMode(
@@ -24,90 +27,96 @@ class HomeScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Screen'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              logout();
+      appBar: _buildAppBar(context),
+      drawer: _buildDrawer(context, themeProvider),
+    );
+  }
 
-              Navigator.pushReplacementNamed(context, '/sign-in');
-            },
-            icon: Icon(Icons.logout),
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Home Screen'),
+      actions: [
+        IconButton(
+          onPressed: () => logout(context),
+          icon: const Icon(Icons.logout),
+        ),
+      ],
+    );
+  }
+
+  Drawer _buildDrawer(BuildContext context, ThemeProvider themeProvider) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          _buildUserAccountHeader(context, themeProvider),
+          _buildDrawerItem(
+            icon: Icons.list,
+            title: 'Todo List',
+            onTap: () => Navigator.pushNamed(context, '/todo-list'),
+          ),
+          _buildDrawerItem(
+            icon: Icons.movie_outlined,
+            title: 'Popular Movies',
+            onTap: () => Navigator.pushNamed(context, '/popular-movies'),
+          ),
+          const Divider(thickness: 0.1),
+          _buildDrawerItem(
+            icon: Icons.dashboard_customize_outlined,
+            title: 'Customize Theme',
+            onTap: () => Navigator.pushNamed(context, '/customize-theme'),
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            Stack(
-              children: <Widget>[
-                UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).primaryColorLight.withValues(alpha: 0.3),
-                    child: Text(
-                      'ER',
-                      style: TextStyle(
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  accountName: Text(
-                    'Emmanuel Ruiz Pérez',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  accountEmail: Text('20030124@itcelaya.edu.mx'),
-                ),
-                Positioned(
-                  right: 16.0,
-                  top: 16.0,
-                  child: IconButton(
-                    onPressed:
-                        () => _switchColorMode(
-                          themeProvider,
-                          themeProvider.themeMode == ThemeMode.dark
-                              ? ThemeMode.light
-                              : ThemeMode.dark,
-                        ),
-                    icon: Icon(
-                      themeProvider.themeMode == ThemeMode.dark
-                          ? Icons.light_mode
-                          : Icons.dark_mode,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text('Todo List'),
-              onTap: () {
-                Navigator.pushNamed(context, '/todo-list');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.movie_outlined),
-              title: Text('Popular movies'),
-              onTap: () {
-                Navigator.pushNamed(context, '/popular-movies');
-              },
-            ),
-            Divider(thickness: 0.1),
-            ListTile(
-              leading: Icon(Icons.dashboard_customize_outlined),
-              title: Text('Customize theme'),
-              onTap: () {
-                Navigator.pushNamed(context, '/customize-theme');
-              },
-            ),
-          ],
-        ),
-      ),
     );
+  }
+
+  Widget _buildUserAccountHeader(
+    BuildContext context,
+    ThemeProvider themeProvider,
+  ) {
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+
+    return Stack(
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          currentAccountPictureSize: const Size.square(65.0),
+          currentAccountPicture: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColorLight.withAlpha(50),
+            child: const Text(
+              'ER',
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),
+            ),
+          ),
+          accountName: const Text(
+            'Emmanuel Ruiz Pérez',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          accountEmail: const Text('20030124@itcelaya.edu.mx'),
+        ),
+        Positioned(
+          right: 16.0,
+          top: 16.0,
+          child: IconButton(
+            onPressed:
+                () => _switchColorMode(
+                  themeProvider,
+                  isDarkMode ? ThemeMode.light : ThemeMode.dark,
+                ),
+            icon: Icon(
+              isDarkMode ? Icons.light_mode : Icons.dark_mode,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 }
