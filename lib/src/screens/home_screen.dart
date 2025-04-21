@@ -37,13 +37,6 @@ class HomeScreen extends StatelessWidget {
               accountEmail: Text('20030124@itcelaya.edu.mx'),
             ),
             ListTile(
-              leading: Icon(Icons.dashboard_customize_outlined),
-              title: Text('Customize theme'),
-              onTap: () {
-                Navigator.pushNamed(context, '/customize-theme');
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.list),
               title: Text('Todo List'),
               onTap: () {
@@ -55,6 +48,14 @@ class HomeScreen extends StatelessWidget {
               title: Text('Popular movies'),
               onTap: () {
                 Navigator.pushNamed(context, '/popular-movies');
+              },
+            ),
+            Divider(thickness: 0.1),
+            ListTile(
+              leading: Icon(Icons.dashboard_customize_outlined),
+              title: Text('Customize theme'),
+              onTap: () {
+                Navigator.pushNamed(context, '/customize-theme');
               },
             ),
           ],
