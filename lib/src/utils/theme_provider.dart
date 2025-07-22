@@ -25,24 +25,32 @@ class ThemeProvider extends ChangeNotifier {
   ThemeColor get themeColor => _themeColor;
   String get fontFamily => _fontFamily;
 
-  ThemeProvider(this.prefs);
+  ThemeProvider(this.prefs) {
+    _loadAppTheme();
+  }
 
-  Future<void> loadAppTheme() async {
+  Future<void> _loadAppTheme() async {
     // Load current theme mode
     String themeModeString = prefs.getString('themeMode') ?? 'light';
-
-    // Load current theme values
+    // Load current theme color
     String themeColorString = prefs.getString('themeColor') ?? 'defaultTheme';
-
     // Load current font family
     String fontFamilyValue = prefs.getString('fontFamily') ?? 'Roboto';
 
-    // Set values
-    _themeMode = themeModeString == 'light' ? ThemeMode.light : ThemeMode.dark;
+    switch (themeModeString) {
+      case 'light':
+        _themeMode = ThemeMode.light;
+        break;
+      case 'dark':
+        _themeMode = ThemeMode.dark;
+        break;
+      default:
+        _themeMode = ThemeMode.system;
+    }
+
     _themeColor = ThemeColor.values.byName(themeColorString);
     _fontFamily = fontFamilyValue;
 
-    // Update theme data classes
     _updateThemeData();
 
     _updateAppTheme();
