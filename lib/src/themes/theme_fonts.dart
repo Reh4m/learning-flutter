@@ -20,10 +20,4 @@ class ThemeFonts {
       bodyColor: themeMode == Brightness.light ? Colors.black : Colors.white,
     );
   }
-
-  static TextTheme get roboto => _textThemes[FontFamily.roboto]!;
-  static TextTheme get lato => _textThemes[FontFamily.lato]!;
-  static TextTheme get openSans => _textThemes[FontFamily.openSans]!;
-  static TextTheme get montserrat => _textThemes[FontFamily.montserrat]!;
-  static TextTheme get poppins => _textThemes[FontFamily.poppins]!;
 }

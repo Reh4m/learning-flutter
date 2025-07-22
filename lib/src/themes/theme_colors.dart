@@ -66,17 +66,4 @@ class ThemeColors {
   static CustomTheme getCustomTheme(ThemeColor themeColor) {
     return themeColors[themeColor]!;
   }
-
-  static CustomTheme get defaultTheme =>
-      getCustomTheme(ThemeColor.defaultTheme);
-  static CustomTheme get sunsetOrangeTheme =>
-      getCustomTheme(ThemeColor.sunsetOrange);
-  static CustomTheme get emeraldGreenTheme =>
-      getCustomTheme(ThemeColor.emeraldGreen);
-  static CustomTheme get royalPurpleTheme =>
-      getCustomTheme(ThemeColor.royalPurple);
-  static CustomTheme get goldenYellowTheme =>
-      getCustomTheme(ThemeColor.goldenYellow);
-  static CustomTheme get midnightTheme =>
-      getCustomTheme(ThemeColor.midnightDark);
 }
