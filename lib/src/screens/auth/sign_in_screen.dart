@@ -11,48 +11,42 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _signInFormKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
 
-  bool _showPassword = false;
-  bool _isLoading = false;
+  bool _isPasswordVisible = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _emailTextController.dispose();
+    _passwordTextController.dispose();
 
     super.dispose();
   }
 
-  Future<void> _saveLoginStatus(bool isLoggedIn) async {
+  Future<void> _setLoginStatus({required bool isLoggedIn}) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-  void _simulateLogin() {
+  void habdleSignIn() async {
     if (!_signInFormKey.currentState!.validate()) {
       _showSnackBar('Please fill in the required fields');
 
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isSubmitting = true);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
+    await Future.delayed(const Duration(seconds: 2));
+    await _setLoginStatus(isLoggedIn: true);
 
-      _saveLoginStatus(true);
+    if (!mounted) return;
 
-      if (!mounted) return;
-
-      Navigator.pushNamed(context, '/');
-    });
+    setState(() => _isSubmitting = false);
+    Navigator.pushNamed(context, '/');
   }
 
   void _showSnackBar(String message) {
@@ -71,7 +65,7 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _buildTitle(),
+              _buildHeader(),
               const SizedBox(height: 20.0),
               _buildSignInForm(),
               const SizedBox(height: 20.0),
@@ -83,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildHeader() {
     return const Text(
       'Welcome Back!',
       style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
@@ -107,7 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _buildEmailField() {
     return TextFormField(
-      controller: _emailController,
+      controller: _emailTextController,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       decoration: const InputDecoration(labelText: 'Email'),
@@ -120,49 +114,45 @@ class _SignInScreenState extends State<SignInScreen> {
         }
         return null;
       },
-      enabled: !_isLoading,
+      enabled: !_isSubmitting,
     );
   }
 
   Widget _buildPasswordField() {
     return TextFormField(
-      controller: _passwordController,
+      controller: _passwordTextController,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.done,
-      obscureText: !_showPassword,
+      obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: 'Password',
         suffixIcon: IconButton(
           icon: Icon(
-            _showPassword
+            _isPasswordVisible
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
           ),
-          onPressed: () {
-            setState(() {
-              _showPassword = !_showPassword;
-            });
-          },
+          onPressed:
+              () => setState(() => _isPasswordVisible = !_isPasswordVisible),
         ),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Password is required';
-        } else if (value.length < 6) {
+        }
+        if (value.length < 6) {
           return 'Password must be at least 6 characters';
         }
         return null;
       },
-      enabled: !_isLoading,
+      enabled: !_isSubmitting,
     );
   }
 
   Widget _buildSignInButton() {
-    return TextButton(
-      onPressed: !_isLoading ? _simulateLogin : null,
+    return FilledButton(
+      onPressed: !_isSubmitting ? habdleSignIn : null,
       style: TextButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         padding: const EdgeInsets.symmetric(vertical: 15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -170,14 +160,11 @@ class _SignInScreenState extends State<SignInScreen> {
         minimumSize: const Size(double.infinity, 0),
       ),
       child:
-          _isLoading
-              ? SizedBox(
+          _isSubmitting
+              ? const SizedBox(
                 height: 21.0,
                 width: 21.0,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  strokeWidth: 3.0,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 3.0),
               )
               : const Text(
                 'Sign In',
@@ -193,7 +180,7 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text('Don\'t have an account?'),
         TextButton(
           onPressed:
-              !_isLoading
+              !_isSubmitting
                   ? () => Navigator.pushNamed(context, '/sign-up')
                   : null,
           child: const Text('Sign Up'),

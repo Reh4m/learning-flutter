@@ -16,70 +16,63 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
+  final _fullNameTextController = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _confirmPasswordTextController = TextEditingController();
 
-  File? _profileImage;
+  File? _selectedProfileImage;
 
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
-  bool _showPassword1 = false;
-  bool _showPassword2 = false;
-
-  bool _isLoading = false;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
-    _fullNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _fullNameTextController.dispose();
+    _emailTextController.dispose();
+    _passwordTextController.dispose();
+    _confirmPasswordTextController.dispose();
 
     super.dispose();
   }
 
   Future<void> _pickProfileImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
 
-      if (image == null) return;
+      if (pickedImage == null) return;
 
-      setState(() => _profileImage = File(image.path));
+      setState(() => _selectedProfileImage = File(pickedImage.path));
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
     }
   }
 
-  Future<void> _saveLogInStatus(bool isLoggedIn) async {
+  Future<void> _setLoginStatus(bool isLoggedIn) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-  void _simulateRegister() {
+  void _handleSignUp() async {
     if (!_signUpFormKey.currentState!.validate()) {
       _showSnackBar('Please fill in the required fields');
 
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isSubmitting = true);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
+    await Future.delayed(const Duration(seconds: 2));
+    await _setLoginStatus(true);
 
-      _saveLogInStatus(true);
+    if (!mounted) return;
 
-      if (!mounted) return;
-
-      Navigator.pushNamed(context, '/');
-    });
+    setState(() => _isSubmitting = false);
+    Navigator.pushNamed(context, '/');
   }
 
   void _showSnackBar(String message) {
@@ -90,13 +83,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           dragStartBehavior: DragStartBehavior.down,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.all(20.0),
             height:
                 MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.top,
@@ -104,9 +99,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildTitle(),
+                _buildHeader(),
                 const SizedBox(height: 20.0),
-                _buildSignUpForm(),
+                _buildSignUpForm(theme),
                 const SizedBox(height: 20.0),
                 _buildSignInPrompt(),
               ],
@@ -117,106 +112,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildTitle() {
-    return Column(
+  Widget _buildHeader() {
+    return const Column(
       children: const [
         Text(
           'Create an Account',
-          style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 5.0),
-        Text(
-          'Sign up to get started',
-          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
-        ),
+        Text('Sign up to get started', style: TextStyle(fontSize: 18.0)),
       ],
     );
   }
 
-  Widget _buildSignUpForm() {
+  Widget _buildSignUpForm(ThemeData theme) {
     return Form(
       key: _signUpFormKey,
       child: Column(
         children: [
-          _buildProfileImagePicker(),
+          _buildProfileImagePicker(theme),
           const SizedBox(height: 20.0),
-          TextFormField(
-            controller: _fullNameController,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(labelText: 'Full Name'),
-            validator:
-                (value) =>
-                    value == null || value.isEmpty
-                        ? 'Full Name is required'
-                        : null,
-            enabled: !_isLoading,
-          ),
+          _buildFullNameField(),
           const SizedBox(height: 20.0),
-          TextFormField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(labelText: 'Email'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required';
-              }
-              if (!EmailValidator.validate(value)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-            enabled: !_isLoading,
-          ),
+          _buildEmailField(),
           const SizedBox(height: 20.0),
-          _buildPasswordField(
-            controller: _passwordController,
-            label: 'Password',
-            showPassword: _showPassword1,
-            toggleShowPassword: () {
-              setState(() {
-                _showPassword1 = !_showPassword1;
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
-          ),
+          _buildPasswordField(),
           const SizedBox(height: 20.0),
-          _buildPasswordField(
-            controller: _confirmPasswordController,
-            label: 'Confirm Password',
-            showPassword: _showPassword2,
-            toggleShowPassword: () {
-              setState(() {
-                _showPassword2 = !_showPassword2;
-              });
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Confirm Password is required';
-              }
-              if (_passwordController.text != value) {
-                return 'Passwords do not match';
-              }
-              return null;
-            },
-          ),
+          _buildConfirmPasswordField(),
           const SizedBox(height: 20.0),
-          _buildSignInButton(),
+          _buildSignUpButton(),
         ],
       ),
     );
   }
 
-  Widget _buildProfileImagePicker() {
+  Widget _buildProfileImagePicker(ThemeData theme) {
     return InkWell(
-      onTap: !_isLoading ? _pickProfileImage : null,
+      onTap: !_isSubmitting ? _pickProfileImage : null,
+      borderRadius: BorderRadius.circular(50.0),
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
@@ -224,22 +157,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
             width: 100.0,
             height: 100.0,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: theme.colorScheme.surface,
               image:
-                  _profileImage != null
+                  _selectedProfileImage != null
                       ? DecorationImage(
-                        image: FileImage(_profileImage!),
+                        image: FileImage(_selectedProfileImage!),
                         fit: BoxFit.cover,
                       )
                       : null,
               borderRadius: BorderRadius.circular(50.0),
             ),
             child:
-                _profileImage == null
+                _selectedProfileImage == null
                     ? Icon(
                       Icons.camera_alt_outlined,
                       size: 40.0,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: theme.colorScheme.onSurface,
                     )
                     : null,
           ),
@@ -247,13 +180,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             width: 30.0,
             height: 30.0,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: theme.primaryColor,
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Icon(
               Icons.add,
               size: 20.0,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: theme.colorScheme.onPrimary,
             ),
           ),
         ],
@@ -261,39 +194,102 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildPasswordField({
-    required TextEditingController controller,
-    required String label,
-    required bool showPassword,
-    required VoidCallback toggleShowPassword,
-    String? Function(String?)? validator,
-  }) {
+  Widget _buildFullNameField() {
     return TextFormField(
-      controller: controller,
-      obscureText: !showPassword,
-      keyboardType: TextInputType.visiblePassword,
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: IconButton(
-          icon: Icon(
-            showPassword
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,
-          ),
-          onPressed: toggleShowPassword,
-        ),
-      ),
-      validator: validator,
-      enabled: !_isLoading,
+      controller: _fullNameTextController,
+      keyboardType: TextInputType.name,
+      decoration: const InputDecoration(labelText: 'Full Name'),
+      validator:
+          (value) =>
+              value == null || value.isEmpty ? 'Full Name is required' : null,
+      enabled: !_isSubmitting,
     );
   }
 
-  Widget _buildSignInButton() {
-    return TextButton(
-      onPressed: !_isLoading ? _simulateRegister : null,
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailTextController,
+      keyboardType: TextInputType.emailAddress,
+      decoration: const InputDecoration(labelText: 'Email'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email is required';
+        }
+        if (!EmailValidator.validate(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+      enabled: !_isSubmitting,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: _passwordTextController,
+      obscureText: !_isPasswordVisible,
+      keyboardType: TextInputType.visiblePassword,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isPasswordVisible
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+          ),
+          onPressed:
+              () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password is required';
+        }
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters';
+        }
+        return null;
+      },
+      enabled: !_isSubmitting,
+    );
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return TextFormField(
+      controller: _confirmPasswordTextController,
+      obscureText: !_isConfirmPasswordVisible,
+      keyboardType: TextInputType.visiblePassword,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isConfirmPasswordVisible
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+          ),
+          onPressed:
+              () => setState(
+                () => _isConfirmPasswordVisible = !_isConfirmPasswordVisible,
+              ),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Confirm Password is required';
+        }
+        if (_passwordTextController.text != value) {
+          return 'Passwords do not match';
+        }
+        return null;
+      },
+      enabled: !_isSubmitting,
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    return FilledButton(
+      onPressed: !_isSubmitting ? _handleSignUp : null,
       style: TextButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         padding: const EdgeInsets.symmetric(vertical: 15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -301,14 +297,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         minimumSize: const Size(double.infinity, 0),
       ),
       child:
-          _isLoading
-              ? SizedBox(
+          _isSubmitting
+              ? const SizedBox(
                 height: 21.0,
                 width: 21.0,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  strokeWidth: 3.0,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 3.0),
               )
               : const Text(
                 'Sign Up',
@@ -323,7 +316,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         const Text('Already have an account?'),
         TextButton(
-          onPressed: !_isLoading ? () => Navigator.of(context).pop() : null,
+          onPressed: !_isSubmitting ? () => Navigator.of(context).pop() : null,
           child: const Text('Sign In'),
         ),
       ],
