@@ -9,11 +9,11 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
 
-  final themeProvider = ThemeProvider(prefs);
-  await themeProvider.loadAppTheme();
-
   runApp(
-    ChangeNotifierProvider(create: (_) => themeProvider, child: const MyApp()),
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(prefs),
+      child: const MyApp(),
+    ),
   );
 }
 
