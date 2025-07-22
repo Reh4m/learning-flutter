@@ -12,7 +12,7 @@ class ThemeFonts {
     FontFamily.poppins: GoogleFonts.poppinsTextTheme(),
   };
 
-  static TextTheme getTextTheme(String fontFamily, Brightness themeMode) {
+  static TextTheme getTextTheme(FontFamily fontFamily, Brightness themeMode) {
     final baseTextTheme = _textThemes[fontFamily]!;
 
     return baseTextTheme.apply(
@@ -21,9 +21,9 @@ class ThemeFonts {
     );
   }
 
-  static TextTheme get roboto => _textThemes['Roboto']!;
-  static TextTheme get lato => _textThemes['Lato']!;
-  static TextTheme get openSans => _textThemes['Open Sans']!;
-  static TextTheme get montserrat => _textThemes['Montserrat']!;
-  static TextTheme get poppins => _textThemes['Poppins']!;
+  static TextTheme get roboto => _textThemes[FontFamily.roboto]!;
+  static TextTheme get lato => _textThemes[FontFamily.lato]!;
+  static TextTheme get openSans => _textThemes[FontFamily.openSans]!;
+  static TextTheme get montserrat => _textThemes[FontFamily.montserrat]!;
+  static TextTheme get poppins => _textThemes[FontFamily.poppins]!;
 }

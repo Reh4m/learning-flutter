@@ -3,6 +3,7 @@ import 'package:learning_flutter/src/themes/dark_theme.dart';
 import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
+import 'package:learning_flutter/src/themes/theme_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -10,12 +11,12 @@ class ThemeProvider extends ChangeNotifier {
 
   // Theme data classes
   ThemeMode _themeMode = ThemeMode.light;
-  ThemeData _lightTheme = AppTheme.generateLightTheme('Roboto');
-  ThemeData _darkTheme = AppTheme.generateDarkTheme('Roboto');
+  ThemeData _lightTheme = AppTheme.generateLightTheme(FontFamily.roboto);
+  ThemeData _darkTheme = AppTheme.generateDarkTheme(FontFamily.roboto);
 
   // Current theme values
   ThemeColor _themeColor = ThemeColor.defaultTheme;
-  String _fontFamily = 'Roboto';
+  FontFamily _fontFamily = FontFamily.roboto;
 
   // Getters
   ThemeMode get themeMode => _themeMode;
@@ -23,7 +24,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData get darkTheme => _darkTheme;
 
   ThemeColor get themeColor => _themeColor;
-  String get fontFamily => _fontFamily;
+  FontFamily get fontFamily => _fontFamily;
 
   ThemeProvider(this.prefs) {
     _loadAppTheme();
@@ -35,7 +36,7 @@ class ThemeProvider extends ChangeNotifier {
     // Load current theme color
     String themeColorString = prefs.getString('themeColor') ?? 'defaultTheme';
     // Load current font family
-    String fontFamilyValue = prefs.getString('fontFamily') ?? 'Roboto';
+    String fontFamilyValue = prefs.getString('fontFamily') ?? 'roboto';
 
     switch (themeModeString) {
       case 'light':
@@ -49,7 +50,7 @@ class ThemeProvider extends ChangeNotifier {
     }
 
     _themeColor = ThemeColor.values.byName(themeColorString);
-    _fontFamily = fontFamilyValue;
+    _fontFamily = FontFamily.values.byName(fontFamilyValue);
 
     _updateThemeData();
 
@@ -95,10 +96,10 @@ class ThemeProvider extends ChangeNotifier {
     _updateAppTheme();
   }
 
-  Future<void> updateFontFamily(String fontFamily) async {
+  Future<void> updateFontFamily(FontFamily fontFamily) async {
     _fontFamily = fontFamily;
 
-    await prefs.setString('fontFamily', fontFamily);
+    await prefs.setString('fontFamily', fontFamily.name);
 
     _updateAppTheme();
   }

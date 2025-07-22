@@ -6,7 +6,7 @@ import 'package:learning_flutter/src/themes/theme_fonts.dart';
 class AppTheme {
   const AppTheme();
 
-  static ThemeData generateLightTheme(String fontFamily) {
+  static ThemeData generateLightTheme(FontFamily fontFamily) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
@@ -39,7 +39,7 @@ class AppTheme {
     );
   }
 
-  static ThemeData generateDarkTheme(String fontFamily) {
+  static ThemeData generateDarkTheme(FontFamily fontFamily) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
