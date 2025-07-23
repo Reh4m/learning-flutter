@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:learning_flutter/src/database/todo_provider.dart';
 import 'package:learning_flutter/src/models/todo_model.dart';
-import 'package:learning_flutter/src/themes/light_theme.dart';
+import 'package:learning_flutter/src/config/themes/light_theme.dart';
 import 'package:learning_flutter/src/utils/global_values.dart';
 
 class TodoScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/themes/light_theme.dart';
-import 'package:learning_flutter/src/themes/theme_colors.dart';
+import 'package:learning_flutter/src/config/themes/light_theme.dart';
+import 'package:learning_flutter/src/config/themes/theme_colors.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
