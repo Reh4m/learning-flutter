@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/appearance/customize_theme/index.dart';
+import 'package:learning_flutter/src/screens/appearance/index.dart';
 import 'package:learning_flutter/src/screens/home_screen.dart';
 import 'package:learning_flutter/src/screens/movies/popular_details_screen.dart';
 import 'package:learning_flutter/src/screens/movies/popular_screen.dart';

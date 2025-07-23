@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/appearance/customize_theme/widgets/theme_mode_selector_widget.dart';
-import 'package:learning_flutter/src/screens/appearance/customize_theme/widgets/theme_font_selector_widget.dart';
-import 'package:learning_flutter/src/screens/appearance/customize_theme/widgets/theme_color_selector_widget.dart';
+import 'package:learning_flutter/src/screens/appearance/widgets/theme_mode_selector_widget.dart';
+import 'package:learning_flutter/src/screens/appearance/widgets/theme_font_selector_widget.dart';
+import 'package:learning_flutter/src/screens/appearance/widgets/theme_color_selector_widget.dart';
 
 class CustomizeThemeScreen extends StatelessWidget {
   const CustomizeThemeScreen({super.key});
