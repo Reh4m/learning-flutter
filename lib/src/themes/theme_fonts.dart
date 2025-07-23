@@ -12,12 +12,7 @@ class ThemeFonts {
     FontFamily.poppins: GoogleFonts.poppinsTextTheme(),
   };
 
-  static TextTheme getTextTheme(FontFamily fontFamily, Brightness themeMode) {
-    final baseTextTheme = _textThemes[fontFamily]!;
-
-    return baseTextTheme.apply(
-      displayColor: themeMode == Brightness.light ? Colors.black : Colors.white,
-      bodyColor: themeMode == Brightness.light ? Colors.black : Colors.white,
-    );
+  static TextTheme getTextTheme(FontFamily fontFamily) {
+    return _textThemes[fontFamily]!;
   }
 }
