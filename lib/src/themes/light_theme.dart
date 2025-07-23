@@ -1,16 +1,11 @@
-// Flutter custom light theme based on blue color
 import 'package:flutter/material.dart';
 
 class LightTheme {
   static const Color backgroundColor = Color(0xF9F9F9F9);
   static const Color cardBackgroundColor = Color(0xFFFFFFFF);
 
-  static Color primaryColor = Color(
-    0xFF007AAD,
-  ); // Non-constant to allow customization
-  static Color primaryColorLight = Color(
-    0xFFD9E2E9,
-  ); // Non-constant to allow customization
+  static const Color primaryColor = const Color(0xFF007AAD);
+  static const Color primaryColorLight = const Color(0xFFD9E2E9);
   static const Color onPrimaryColor = Color(0xFFFFFFFF);
 
   static const Color textPrimary = Color(0xFF313131);
