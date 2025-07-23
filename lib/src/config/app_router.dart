@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/screens/settings/customize_theme/index.dart';
+import 'package:learning_flutter/src/screens/appearance/customize_theme/index.dart';
 import 'package:learning_flutter/src/screens/home_screen.dart';
 import 'package:learning_flutter/src/screens/movies/popular_details_screen.dart';
 import 'package:learning_flutter/src/screens/movies/popular_screen.dart';
@@ -9,39 +9,39 @@ import 'package:learning_flutter/src/screens/splash_screen.dart';
 import 'package:learning_flutter/src/screens/todo/todo_form_screen.dart';
 import 'package:learning_flutter/src/screens/todo/todo_screen.dart';
 
-class Routes {
+class AppRouter {
   static Map<String, WidgetBuilder> routes = {
-    '/': (_) => HomeScreen(),
-    '/splash-screen': (_) => SplashScreen(),
-    '/sign-in': (_) => SignInScreen(),
-    '/sign-up': (_) => SignUpScreen(),
-    '/customize-theme': (_) => CustomizeThemeScreen(),
-    '/todo-list': (_) => TodoScreen(),
-    '/todo-form': (_) => TodoFormScreen(),
-    '/popular-movies': (_) => PopularScreen(),
-    '/popular-details': (_) => PopularDetailsScreen(),
+    '/': (_) => const HomeScreen(),
+    '/splash-screen': (_) => const SplashScreen(),
+    '/sign-in': (_) => const SignInScreen(),
+    '/sign-up': (_) => const SignUpScreen(),
+    '/customize-theme': (_) => const CustomizeThemeScreen(),
+    '/todo-list': (_) => const TodoScreen(),
+    '/todo-form': (_) => const TodoFormScreen(),
+    '/popular-movies': (_) => const PopularScreen(),
+    '/popular-details': (_) => const PopularDetailsScreen(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomeScreen());
+        return MaterialPageRoute(builder: (_) => const HomeScreen());
       case '/splash-screen':
-        return MaterialPageRoute(builder: (_) => SplashScreen());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case '/sign-in':
-        return MaterialPageRoute(builder: (_) => SignInScreen());
+        return MaterialPageRoute(builder: (_) => const SignInScreen());
       case '/sign-up':
-        return MaterialPageRoute(builder: (_) => SignUpScreen());
+        return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case '/customize-theme':
-        return MaterialPageRoute(builder: (_) => CustomizeThemeScreen());
+        return MaterialPageRoute(builder: (_) => const CustomizeThemeScreen());
       case '/todo-list':
-        return MaterialPageRoute(builder: (_) => TodoScreen());
+        return MaterialPageRoute(builder: (_) => const TodoScreen());
       case '/todo-form':
-        return MaterialPageRoute(builder: (_) => TodoFormScreen());
+        return MaterialPageRoute(builder: (_) => const TodoFormScreen());
       case '/popular-movies':
-        return MaterialPageRoute(builder: (_) => PopularScreen());
+        return MaterialPageRoute(builder: (_) => const PopularScreen());
       case '/popular-details':
-        return MaterialPageRoute(builder: (_) => PopularDetailsScreen());
+        return MaterialPageRoute(builder: (_) => const PopularDetailsScreen());
       default:
         return MaterialPageRoute(
           builder:
