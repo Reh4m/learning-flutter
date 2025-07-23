@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/utils/theme_provider.dart';
+import 'package:learning_flutter/src/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ThemeModeSelectorWidget extends StatelessWidget {

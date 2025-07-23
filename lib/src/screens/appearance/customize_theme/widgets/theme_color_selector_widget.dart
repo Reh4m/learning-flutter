@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/config/themes/light_theme.dart';
 import 'package:learning_flutter/src/config/themes/theme_colors.dart';
-import 'package:learning_flutter/src/utils/theme_provider.dart';
+import 'package:learning_flutter/src/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ThemeColorSelectorWidget extends StatelessWidget {
