@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/config/app_router.dart';
+import 'package:learning_flutter/src/config/router/index.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
