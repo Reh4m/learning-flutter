@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:learning_flutter/src/themes/dark_theme.dart';
-import 'package:learning_flutter/src/themes/light_theme.dart';
 import 'package:learning_flutter/src/themes/theme.dart';
 import 'package:learning_flutter/src/themes/theme_colors.dart';
 import 'package:learning_flutter/src/themes/theme_fonts.dart';
@@ -9,98 +7,95 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeProvider extends ChangeNotifier {
   final SharedPreferences prefs;
 
-  // Theme data classes
-  ThemeMode _themeMode = ThemeMode.light;
-  ThemeData _lightTheme = AppTheme.generateLightTheme(FontFamily.roboto);
-  ThemeData _darkTheme = AppTheme.generateDarkTheme(FontFamily.roboto);
+  // Theme data
+  ThemeMode _currentThemeMode = ThemeMode.light;
+  ThemeData _currentLightTheme = AppTheme.lightTheme;
+  ThemeData _currentDarkTheme = AppTheme.darkTheme;
 
-  // Current theme values
-  ThemeColor _themeColor = ThemeColor.defaultTheme;
-  FontFamily _fontFamily = FontFamily.roboto;
+  // Custom values
+  ThemeColor _selectedThemeColor = ThemeColor.defaultTheme;
+  FontFamily _selectedFontFamily = FontFamily.roboto;
 
   // Getters
-  ThemeMode get themeMode => _themeMode;
-  ThemeData get lightTheme => _lightTheme;
-  ThemeData get darkTheme => _darkTheme;
+  ThemeMode get themeMode => _currentThemeMode;
+  ThemeData get lightTheme => _currentLightTheme;
+  ThemeData get darkTheme => _currentDarkTheme;
 
-  ThemeColor get themeColor => _themeColor;
-  FontFamily get fontFamily => _fontFamily;
+  ThemeColor get themeColor => _selectedThemeColor;
+  FontFamily get fontFamily => _selectedFontFamily;
 
   ThemeProvider(this.prefs) {
-    _loadAppTheme();
+    _loadThemePreferences();
   }
 
-  Future<void> _loadAppTheme() async {
-    // Load current theme mode
+  void _loadThemePreferences() {
     String themeModeString = prefs.getString('themeMode') ?? 'light';
-    // Load current theme color
     String themeColorString = prefs.getString('themeColor') ?? 'defaultTheme';
-    // Load current font family
-    String fontFamilyValue = prefs.getString('fontFamily') ?? 'roboto';
+    String fontFamilyString = prefs.getString('fontFamily') ?? 'roboto';
 
     switch (themeModeString) {
       case 'light':
-        _themeMode = ThemeMode.light;
+        _currentThemeMode = ThemeMode.light;
         break;
       case 'dark':
-        _themeMode = ThemeMode.dark;
+        _currentThemeMode = ThemeMode.dark;
         break;
       default:
-        _themeMode = ThemeMode.system;
+        _currentThemeMode = ThemeMode.system;
     }
 
-    _themeColor = ThemeColor.values.byName(themeColorString);
-    _fontFamily = FontFamily.values.byName(fontFamilyValue);
+    _selectedThemeColor = ThemeColor.values.byName(themeColorString);
+    _selectedFontFamily = FontFamily.values.byName(fontFamilyString);
 
     _updateThemeData();
-
-    _updateAppTheme();
   }
 
   void _updateThemeData() {
-    LightTheme.primaryColor =
-        ThemeColors.getCustomTheme(_themeColor).primaryColor;
-    LightTheme.primaryColorLight =
-        ThemeColors.getCustomTheme(_themeColor).primaryColorLight;
-    DarkTheme.primaryColor =
-        ThemeColors.getCustomTheme(_themeColor).primaryColor;
-    DarkTheme.primaryColorLight =
-        ThemeColors.getCustomTheme(_themeColor).primaryColorLight;
-  }
+    final customTheme = ThemeColors.getCustomTheme(_selectedThemeColor);
 
-  void _updateAppTheme() {
-    _lightTheme = AppTheme.generateLightTheme(_fontFamily);
-    _darkTheme = AppTheme.generateDarkTheme(_fontFamily);
+    _currentLightTheme = AppTheme.lightTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: ColorScheme.light(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+      textTheme: ThemeFonts.getTextTheme(_selectedFontFamily),
+    );
+
+    _currentDarkTheme = AppTheme.darkTheme.copyWith(
+      primaryColor: customTheme.primaryColor,
+      primaryColorLight: customTheme.primaryColorLight,
+      colorScheme: ColorScheme.dark(
+        primary: customTheme.primaryColor,
+        secondary: customTheme.primaryColorLight,
+      ),
+    );
 
     notifyListeners();
   }
 
-  Future<void> updateThemeMode(ThemeMode themeMode) async {
-    _themeMode = themeMode;
+  Future<void> setThemeMode(ThemeMode themeMode) async {
+    _currentThemeMode = themeMode;
 
-    await prefs.setString(
-      'themeMode',
-      themeMode == ThemeMode.light ? 'light' : 'dark',
-    );
+    await prefs.setString('themeMode', _currentThemeMode.name);
 
-    _updateAppTheme();
+    notifyListeners();
   }
 
-  Future<void> updateThemeColor(ThemeColor themeColor) async {
-    _themeColor = themeColor;
-
-    _updateThemeData();
+  Future<void> setThemeColor(ThemeColor themeColor) async {
+    _selectedThemeColor = themeColor;
 
     await prefs.setString('themeColor', themeColor.name);
 
-    _updateAppTheme();
+    _updateThemeData();
   }
 
   Future<void> updateFontFamily(FontFamily fontFamily) async {
-    _fontFamily = fontFamily;
+    _selectedFontFamily = fontFamily;
 
     await prefs.setString('fontFamily', fontFamily.name);
 
-    _updateAppTheme();
+    _updateThemeData();
   }
 }
