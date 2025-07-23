@@ -6,74 +6,59 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> logout(BuildContext context) async {
+  Future<void> handleLogout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('isLoggedIn', false);
 
-    // ignore: use_build_context_synchronously
     Navigator.pushReplacementNamed(context, '/sign-in');
-  }
-
-  void _switchColorMode(
-    ThemeProvider themeProvider,
-    ThemeMode targetMode,
-  ) async {
-    await themeProvider.updateThemeMode(targetMode);
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
-      appBar: _buildAppBar(context),
-      drawer: _buildDrawer(context, themeProvider),
+      appBar: AppBar(
+        title: const Text('Home Screen'),
+        actions: [
+          IconButton(
+            onPressed: () => handleLogout(context),
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      drawer: _buildAppDrawer(context),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text('Home Screen'),
-      actions: [
-        IconButton(
-          onPressed: () => logout(context),
-          icon: const Icon(Icons.logout),
-        ),
-      ],
-    );
-  }
-
-  Drawer _buildDrawer(BuildContext context, ThemeProvider themeProvider) {
+  Drawer _buildAppDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          _buildUserAccountHeader(context, themeProvider),
-          _buildDrawerItem(
-            icon: Icons.list,
-            title: 'Todo List',
+          _buildUserHeader(context),
+          ListTile(
             onTap: () => Navigator.pushNamed(context, '/todo-list'),
+            leading: const Icon(Icons.list),
+            title: const Text('Todo List'),
           ),
-          _buildDrawerItem(
-            icon: Icons.movie_outlined,
-            title: 'Popular Movies',
+          ListTile(
             onTap: () => Navigator.pushNamed(context, '/popular-movies'),
+            leading: const Icon(Icons.movie_outlined),
+            title: const Text('Popular Movies'),
           ),
           const Divider(thickness: 0.1),
-          _buildDrawerItem(
-            icon: Icons.dashboard_customize_outlined,
-            title: 'Customize Theme',
+          ListTile(
             onTap: () => Navigator.pushNamed(context, '/customize-theme'),
+            leading: const Icon(Icons.dashboard_customize_outlined),
+            title: const Text('Customize Theme'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildUserAccountHeader(
-    BuildContext context,
-    ThemeProvider themeProvider,
-  ) {
+  Widget _buildUserHeader(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
+
     final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
 
     return Stack(
@@ -98,8 +83,7 @@ class HomeScreen extends StatelessWidget {
           top: 16.0,
           child: IconButton(
             onPressed:
-                () => _switchColorMode(
-                  themeProvider,
+                () => themeProvider.setThemeMode(
                   isDarkMode ? ThemeMode.light : ThemeMode.dark,
                 ),
             icon: AnimatedSwitcher(
@@ -107,13 +91,16 @@ class HomeScreen extends StatelessWidget {
               transitionBuilder:
                   (child, anim) => RotationTransition(
                     turns:
-                        child.key == ValueKey('light')
+                        child.key == const ValueKey('light')
                             ? Tween<double>(begin: 1, end: 0.75).animate(anim)
                             : Tween<double>(begin: 0.75, end: 1).animate(anim),
                     child: ScaleTransition(scale: anim, child: child),
                   ),
               child: Icon(
-                key: isDarkMode ? ValueKey('light') : ValueKey('dark'),
+                key:
+                    isDarkMode
+                        ? const ValueKey('light')
+                        : const ValueKey('dark'),
                 isDarkMode ? Icons.light_mode : Icons.dark_mode,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
@@ -122,13 +109,5 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Widget _buildDrawerItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 }
