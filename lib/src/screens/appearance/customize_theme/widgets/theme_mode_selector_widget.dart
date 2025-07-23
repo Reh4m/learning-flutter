@@ -2,35 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:learning_flutter/src/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class SelectColorModeWidget extends StatefulWidget {
-  const SelectColorModeWidget({super.key});
-
-  @override
-  State<SelectColorModeWidget> createState() => _SelectColorModeWidgetState();
-}
-
-class _SelectColorModeWidgetState extends State<SelectColorModeWidget> {
-  void _switchColorMode(
-    ThemeProvider themeProvider,
-    ThemeMode targetMode,
-  ) async {
-    if (themeProvider.themeMode != targetMode) {
-      await themeProvider.updateThemeMode(targetMode);
-    }
-  }
+class ThemeModeSelectorWidget extends StatelessWidget {
+  const ThemeModeSelectorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _buildTitle(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10.0),
         _buildDescription(),
-        const SizedBox(height: 10),
-        _buildColorModeButtons(themeProvider),
+        const SizedBox(height: 10.0),
+        _buildThemeModeButtons(context),
       ],
     );
   }
@@ -45,31 +29,39 @@ class _SelectColorModeWidgetState extends State<SelectColorModeWidget> {
   Widget _buildDescription() {
     return const Text(
       'Choose if app\'s appearance should be light or dark, or follow system settings',
-      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
+      style: TextStyle(fontSize: 14, height: 1.5),
     );
   }
 
-  Widget _buildColorModeButtons(ThemeProvider themeProvider) {
+  Widget _buildThemeModeButtons(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
+
+    final isLightMode = themeProvider.themeMode == ThemeMode.light;
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+
     return Row(
       children: <Widget>[
-        _colorModeButton(
+        _themeModeButton(
+          context,
           text: 'Light mode',
           icon: Icons.light_mode,
-          isSelected: themeProvider.themeMode == ThemeMode.light,
-          onPressed: () => _switchColorMode(themeProvider, ThemeMode.light),
+          isSelected: isLightMode,
+          onPressed: () => themeProvider.setThemeMode(ThemeMode.light),
         ),
         const SizedBox(width: 10),
-        _colorModeButton(
+        _themeModeButton(
+          context,
           text: 'Dark mode',
           icon: Icons.dark_mode,
-          isSelected: themeProvider.themeMode == ThemeMode.dark,
-          onPressed: () => _switchColorMode(themeProvider, ThemeMode.dark),
+          isSelected: isDarkMode,
+          onPressed: () => themeProvider.setThemeMode(ThemeMode.dark),
         ),
       ],
     );
   }
 
-  Widget _colorModeButton({
+  Widget _themeModeButton(
+    BuildContext context, {
     required String text,
     required IconData icon,
     required VoidCallback onPressed,
