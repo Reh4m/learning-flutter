@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:learning_flutter/src/database/todo_provider.dart';
 import 'package:learning_flutter/src/models/todo_model.dart';
 import 'package:learning_flutter/src/config/themes/light_theme.dart';
-import 'package:learning_flutter/src/utils/global_values.dart';
+import 'package:learning_flutter/src/providers/todo_provider.dart';
+import 'package:provider/provider.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -13,38 +13,32 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  late TodoProvider todoProvider;
-
   @override
   void initState() {
-    super.initState();
+    Future.microtask(() => context.read<TodoProvider>().loadTodos());
 
-    todoProvider = TodoProvider();
+    super.initState();
   }
 
-  void _toggleTaskStatus(TodoModel todoTask) async {
-    final result = await todoProvider.toggleStatus(
-      todoTask.id,
-      !todoTask.status,
+  void _handleUpdateTaskStatus(TodoModel task) async {
+    final result = await context.read<TodoProvider>().updateTodoStatus(
+      task.id,
+      !task.status,
     );
 
     if (result > 0) {
-      GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
-
-      _showSnackBar(todoTask.status ? 'Task uncompleted' : 'Task completed');
+      _showSnackBar(task.status ? 'Task uncompleted' : 'Task completed');
     }
   }
 
-  void _editTask(TodoModel todoTask) {
-    Navigator.pushNamed(context, '/todo-form', arguments: todoTask);
+  void _handleEditTask(TodoModel task) {
+    Navigator.pushNamed(context, '/todo-form', arguments: task);
   }
 
-  void _deleteTask(TodoModel todoTask) async {
-    final result = await todoProvider.delete(todoTask.id);
+  void _handleDeleteTask(TodoModel task) async {
+    final result = await context.read<TodoProvider>().deleteTodo(task.id);
 
     if (result > 0) {
-      GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
-
       _showSnackBar('Task deleted');
     }
   }
@@ -59,32 +53,26 @@ class _TodoScreenState extends State<TodoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Todo List')),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: _buildAddTaskButton(),
       body: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: GlobalValues.updateTodoList,
-          builder: (context, value, child) {
-            return FutureBuilder<List<TodoModel>>(
-              future: todoProvider.fetch(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
+        child: Consumer<TodoProvider>(
+          builder: (context, provider, child) {
+            if (provider.errorMessage.isNotEmpty) {
+              return Center(child: Text(provider.errorMessage));
+            }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                return _buildTodoList(snapshot.data!);
-              },
-            );
+            return _buildTodoListView(provider.todos);
           },
         ),
       ),
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildAddTaskButton() {
     return FloatingActionButton(
       onPressed: () => Navigator.pushNamed(context, '/todo-form'),
       shape: const CircleBorder(),
@@ -93,46 +81,37 @@ class _TodoScreenState extends State<TodoScreen> {
     );
   }
 
-  Widget _buildTodoList(List<TodoModel> todoList) {
+  Widget _buildTodoListView(List<TodoModel> todos) {
     return ListView.builder(
       padding: const EdgeInsets.all(10),
-      itemCount: todoList.length,
-      itemBuilder: (context, index) {
-        final todoTask = todoList[index];
-
-        return _buildTodoItem(todoTask);
-      },
+      itemCount: todos.length,
+      itemBuilder: (context, index) => _buildTodoListItem(todos[index]),
     );
   }
 
-  Widget _buildTodoItem(TodoModel todoTask) {
+  Widget _buildTodoListItem(TodoModel task) {
     return Slidable(
-      key: Key(todoTask.id.toString()),
+      key: Key(task.id.toString()),
       closeOnScroll: true,
-      startActionPane: _buildStartActionPane(todoTask),
-      endActionPane: _buildEndActionPane(todoTask),
+      startActionPane: _buildStartActionPane(task),
+      endActionPane: _buildEndActionPane(task),
       child: ListTile(
         isThreeLine: true,
         leading: Icon(
-          todoTask.status ? Icons.check_circle : Icons.cancel,
-          color: todoTask.status ? LightTheme.success : LightTheme.warning,
+          task.status ? Icons.check_circle : Icons.cancel,
+          color: task.status ? LightTheme.success : LightTheme.warning,
         ),
         title: Text(
-          todoTask.title,
+          task.title,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             decoration:
-                todoTask.status
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none,
+                task.status ? TextDecoration.lineThrough : TextDecoration.none,
           ),
         ),
-        subtitle: Text(
-          todoTask.description,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-        ),
-        trailing: Text(todoTask.date),
+        subtitle: Text(task.description, style: const TextStyle(fontSize: 14)),
+        trailing: Text(task.date),
       ),
     );
   }
@@ -142,7 +121,7 @@ class _TodoScreenState extends State<TodoScreen> {
       motion: const ScrollMotion(),
       children: [
         SlidableAction(
-          onPressed: (context) => _toggleTaskStatus(todoTask),
+          onPressed: (context) => _handleUpdateTaskStatus(todoTask),
           backgroundColor:
               todoTask.status ? LightTheme.warning : LightTheme.success,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -158,14 +137,14 @@ class _TodoScreenState extends State<TodoScreen> {
       motion: const ScrollMotion(),
       children: [
         SlidableAction(
-          onPressed: (context) => _editTask(todoTask),
+          onPressed: (context) => _handleEditTask(todoTask),
           backgroundColor: LightTheme.info,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           icon: Icons.edit,
           label: 'Edit',
         ),
         SlidableAction(
-          onPressed: (context) => _deleteTask(todoTask),
+          onPressed: (context) => _handleDeleteTask(todoTask),
           backgroundColor: LightTheme.warning,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           icon: Icons.delete,

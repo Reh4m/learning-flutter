@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:learning_flutter/src/database/todo_provider.dart';
 import 'package:learning_flutter/src/models/todo_model.dart';
-import 'package:learning_flutter/src/utils/global_values.dart';
+import 'package:learning_flutter/src/providers/todo_provider.dart';
+import 'package:provider/provider.dart';
 
 class TodoFormScreen extends StatefulWidget {
   const TodoFormScreen({super.key});
@@ -12,35 +12,27 @@ class TodoFormScreen extends StatefulWidget {
 }
 
 class _TodoFormScreenState extends State<TodoFormScreen> {
-  late TodoProvider? todoProvider;
-  late TodoModel? todoTask;
+  late TodoModel? _editingTask;
 
   final _taskFormKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    todoProvider = TodoProvider();
-  }
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _dateController = TextEditingController();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _initializeForm();
+    _initializeFormFields();
   }
 
-  void _initializeForm() {
-    todoTask = ModalRoute.of(context)!.settings.arguments as TodoModel?;
+  void _initializeFormFields() {
+    _editingTask = ModalRoute.of(context)!.settings.arguments as TodoModel?;
 
-    if (todoTask != null) {
-      _titleController.text = todoTask!.title;
-      _descriptionController.text = todoTask!.description;
-      _dateController.text = todoTask!.date;
+    if (_editingTask != null) {
+      _titleController.text = _editingTask!.title;
+      _descriptionController.text = _editingTask!.description;
+      _dateController.text = _editingTask!.date;
     }
   }
 
@@ -53,7 +45,7 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
     super.dispose();
   }
 
-  Future<void> _saveTask() async {
+  Future<void> _handleSaveTask() async {
     if (!_taskFormKey.currentState!.validate()) return;
 
     final taskData = {
@@ -62,32 +54,29 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
       'date': _dateController.text,
     };
 
-    if (todoTask == null) {
-      await _insertTask(taskData);
+    if (_editingTask == null) {
+      await _addNewTask(taskData);
     } else {
-      await _updateTask({'id': todoTask!.id, ...taskData});
+      await _updateExistingTask({'id': _editingTask!.id, ...taskData});
     }
 
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
+    if (mounted) Navigator.pop(context);
   }
 
-  Future<void> _insertTask(Map<String, dynamic> taskData) async {
-    final result = await todoProvider!.insert(taskData);
+  Future<void> _addNewTask(Map<String, dynamic> taskData) async {
+    final result = await context.read<TodoProvider>().addTodo(taskData);
 
     if (result > 0) {
-      GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
-
       _showSnackBar('Task added');
+    } else {
+      _showSnackBar('Failed to add task');
     }
   }
 
-  Future<void> _updateTask(Map<String, dynamic> taskData) async {
-    final result = await todoProvider!.update(taskData);
+  Future<void> _updateExistingTask(Map<String, dynamic> taskData) async {
+    final result = await context.read<TodoProvider>().updateTodo(taskData);
 
     if (result > 0) {
-      GlobalValues.updateTodoList.value = !GlobalValues.updateTodoList.value;
-
       _showSnackBar('Task updated');
     } else {
       _showSnackBar('Failed to update task');
@@ -100,7 +89,7 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<void> _selectDate() async {
+  Future<void> _pickDate() async {
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -120,37 +109,47 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(todoTask == null ? 'Add Task' : 'Edit Task')),
+      appBar: AppBar(
+        title: Text(_editingTask == null ? 'Add Task' : 'Edit Task'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Stack(
             fit: StackFit.expand,
-            children: [_buildForm(), _buildBottomSheet()],
+            children: [
+              _buildTaskForm(),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: _buildSaveButton(),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildForm() {
+  Widget _buildTaskForm() {
     return Form(
       key: _taskFormKey,
       child: Column(
         children: [
           TextFormField(
             controller: _titleController,
-            decoration: InputDecoration(labelText: 'Title'),
+            decoration: const InputDecoration(labelText: 'Title'),
             validator:
                 (value) =>
                     value == null || value.isEmpty
                         ? 'Please enter title'
                         : null,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextFormField(
             controller: _descriptionController,
-            decoration: InputDecoration(labelText: 'Description'),
+            decoration: const InputDecoration(labelText: 'Description'),
             maxLines: 3,
             validator:
                 (value) =>
@@ -158,40 +157,34 @@ class _TodoFormScreenState extends State<TodoFormScreen> {
                         ? 'Please enter description'
                         : null,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextFormField(
             readOnly: true,
             controller: _dateController,
-            decoration: InputDecoration(hintText: 'Select Date'),
+            decoration: const InputDecoration(hintText: 'Select Date'),
             validator:
                 (value) =>
                     value == null || value.isEmpty
                         ? 'Please select date'
                         : null,
-            onTap: _selectDate,
+            onTap: _pickDate,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBottomSheet() {
-    return Positioned(bottom: 0, left: 0, right: 0, child: _buildSaveButton());
-  }
-
   Widget _buildSaveButton() {
-    return TextButton(
-      onPressed: _saveTask,
+    return FilledButton(
+      onPressed: _handleSaveTask,
       style: TextButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         padding: const EdgeInsets.symmetric(vertical: 15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         minimumSize: const Size(double.infinity, 0),
       ),
-      child: Text(
+      child: const Text(
         'Save Task',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
